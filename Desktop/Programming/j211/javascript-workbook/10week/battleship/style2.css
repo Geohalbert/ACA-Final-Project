@@ -1,0 +1,87 @@
+#board {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+#row {
+    vertical-align: inherit;
+    border-color: inherit;
+}
+tr th td {
+  justify-content: center;
+  align-items: center;
+  border: 3px solid;
+  border-color: black;
+}
+th {
+  height: 60px;
+  width: 60px;
+  background-color: white;
+}
+#block {
+  height: 60px;
+  width: 60px;
+  text-align: center;
+  background-color: #0072ff;
+  /*color: transparent;*/
+}
+td:hover {
+  margin: 3px; background-color: yellow;
+}
+.miss1 {
+  background-color: #66f0f2;
+  border: 3px solid;
+  border-color: black;
+}
+.miss2 {
+  background-color: #66f0f2;
+  border: 3px solid;
+  border-color: blue;
+}
+.hit1 {
+  background-color: red;
+  border: 3px solid;
+  border-color: black;
+}
+.hit1miss2 {
+  background-color: linear-gradient(to bottom, #e91e63 0%, #e91e63 50%, #66f0f2 51%, #66f0f2 100%);
+  border: 3px solid;
+  border-left: solid black;
+  border-right: solid blue;
+  border-top: solid black;
+  border-bottom: solid blue;
+}
+.hit2 {
+  background-color: red;
+  border: 3px solid;
+  border-color: blue;
+}
+.miss1hit2 {
+  background-image: linear-gradient(to bottom, orange, orange 50%, green 50%, green);
+    background-size: cover;
+    background-repeat: no-repeat;
+  border-left: solid black;
+  border-right: solid blue;
+  border-top: solid black;
+  border-bottom: solid blue;
+}
+.miss1miss2 {
+  background-color: #66f0f2
+  border: 3px solid;
+  border-left: solid black;
+  border-right: solid blue;
+  border-top: solid black;
+  border-bottom: solid blue;
+}
+.hit1hit2 {
+  background-image: linear-gradient(to bottom, orange, orange 50%, green 50%, green);
+    background-size: cover;
+    background-repeat: no-repeat;
+  border: 3px solid;
+  border-left: solid black;
+  border-right: solid blue;
+  border-top: solid black;
+  border-bottom: solid blue;
+}
