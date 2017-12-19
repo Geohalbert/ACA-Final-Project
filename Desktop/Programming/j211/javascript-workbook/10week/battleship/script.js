@@ -16,6 +16,7 @@ class Battleship extends React.Component {
     this.startGame = this.startGame.bind(this);
     this.createGrid = this.createGrid.bind(this);
     this.drawBoard = this.drawBoard.bind(this);
+    this.drawRow = this.drawRow.bind(this);
     this.drawBlocks = this.drawBlocks.bind(this);
   }
 
@@ -85,94 +86,52 @@ class Battleship extends React.Component {
     this.setState(newState);
   }
 
-  drawBoard(){
+  startGame(){
     this.createGrid();
+    this.drawBoard();
+  }
+
+  drawBoard(){
+    console.log('test 2 for this.state.grid: ', this.state.grid);
     console.log('drawboard test 1');
     if (this.state.grid.length > 0){
-      let board = [];
+      console.log('drawboard test 2')
       let boardGrid = this.state.grid;
       for (var r=0; r<this.state.grid.length; r++){
         let gridRow = r;
         let rowNum = r+1;
-        let vacantArr = [];
-        let row = <div className="row" id='row' key={rowNum} data-row={rowNum}>{this.drawBlocks(vacantArr, gridRow)}</div>;
-        board.push(row);
+        this.drawRow(rowNum);
       }
       console.log('newRows after for loop: ',board);
       return board
     }
   }
 
-  drawBlocks(arr,thisRow){
-    let gridRowNum = Number(thisRow);
-    // console.log('test1');
-    // console.log('this.state.grid: ', this.state.grid)
-    let blocks = [1,2,3,4,5,6,7,8,9,10];
-    for (var c=0; c<10; c++) {
-      // let content = this.state.grid[gridRow][c];
-      // console.log('content: ',content);
-      let gridCol = c;
-      let colNum = c+1
-      let block = <div key={colNum} data-block={colNum} data-row={rowNum} id="block">{this.state.grid[gridRowNum][gridCol]}</div>
-      // console.log('block: ', block);
-      arr.push(block);
-    }
-    // console.log('result:: ', arr);
-    return arr;
-    // blocks.map((block, index) =>{
-    //   return <div key={index} data-block={block}>test{index}</div>;
-    // })
-  }
-
-  // drawRows(){
-  //   // if (this.state.board === null) {
-  //   let newRows = [];
-  //   // creates a 10x10 board filled with null values
-  //   for (var r= 1; r<11; r++) {
-  //     let rowNum = r;
-  //     let gridRow = r-1
-  //     let vacantArr = [];
-  //     let rowID = "Row "+r;
-  //     let row = <div className="row" id='row' key={rowNum} data-row={rowNum}>{rowID}{this.drawBlocks(vacantArr, gridRow)}</div>;
-  //     newRows.push(row);
-  //   }
-  //   console.log('newRows after for loop: ',newRows);
-  //   return newRows
-  // }
-
-  startGame(){
-    console.log('testStart');
-    document.getElementById('board').push(this.drawBoard());
-
-    console.log('testEnd');
-  }
-
-
-  drawRows() {
+  drawRow(rowNum) {
     var board = document.getElementById('board');
     var newRow = document.createElement("div");
-    newRow.innerHTML = "new Row"
+    var rowID = "row"+rowNum;
+    newRow.setAttribute("data-row", rowNum);
+    newRow.setAttribute("class", "row");
+    newRow.setAttribute("id", rowID);
     board.appendChild(newRow);
+    for (var c=0; c<10; c++) {
+      this.drawBlocks(rowNum,rowID,c);
+    }
   }
 
-  drawBlocks(arr,thisRow){
-    let gridRow = Number(thisRow);
-    // console.log('test1');
-    // console.log('this.state.grid: ', this.state.grid)
-    let blocks = [1,2,3,4,5,6,7,8,9,10];
-    for (var c=0; c<10; c++) {
-      // let content = this.state.grid[gridRow][c];
-      // console.log('content: ',content);
-      let blockIndex = c+1
-      let block = <div key={blockIndex} data-block={blockIndex} id="block">{blockIndex}</div>
-      // console.log('block: ', block);
-      arr.push(block);
-    }
-    // console.log('result:: ', arr);
-    return arr;
-    // blocks.map((block, index) =>{
-    //   return <div key={index} data-block={block}>test{index}</div>;
-    // })
+  drawBlocks(rowNum,rowID,col){
+    let gridRowNum = Number(rowNum-1);
+    var gridRow = document.getElementById(rowID);
+    let gridCol = Number(col);
+    let colNum = gridCol+1;
+    let cellNum = this.state.grid[gridRowNum][gridCol];
+    // let cellContent = str(cellNum);
+    var newBlock = document.createElement("div");
+    // newBlock.setAttribute("data-row", rowNum);
+    newBlock.setAttribute("data-col", colNum);
+    newBlock.innerHTML = cellNum;
+    gridRow.appendChild(newBlock);
   }
 
 
@@ -184,7 +143,7 @@ class Battleship extends React.Component {
   render() {
     return(
     <div id='game'>
-      <div  id='board'>
+      <div  id='board' className="col">
       </div>
       <button onClick={this.startGame}>Start</button>
     </div>

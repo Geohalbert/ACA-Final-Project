@@ -9,6 +9,27 @@
     vertical-align: inherit;
     border-color: inherit;
 }
+
+[data-row] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aliceblue;
+  /* margin: 25px; */
+}
+
+[data-col] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  border: 3px solid;
+  border-color: black;
+  width: 75px;
+  height: 75px;
+  float: center;
+  padding: 5px
+}
 tr th td {
   justify-content: center;
   align-items: center;
