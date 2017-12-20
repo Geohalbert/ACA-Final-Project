@@ -18,6 +18,8 @@ class Battleship extends React.Component {
     this.drawBoard = this.drawBoard.bind(this);
     this.drawRow = this.drawRow.bind(this);
     this.drawBlocks = this.drawBlocks.bind(this);
+    this.generateLocations = this.generateLocations.bind(this);
+    this.playerSelect = this.playerSelect.bind(this);
   }
 
   shipList(player){
@@ -48,18 +50,36 @@ class Battleship extends React.Component {
       hits: ["", ""]
     }];
     if (player === 1) {
-      console.log('shiplist test1');
-      console.log('ships object: ', ships);
-      this.setState({
+      const newState = {
         Ships1: ships
-      });
-      console.log('after "this.shipList(1)" this.state.Ships1:', this.state.Ships1);
+      }
+      this.setState(newState);
     } else if (player === 2) {
-      this.setState({
+      const newState = {
         Ships2: ships
-      });
+      }
+      this.setState(newState);
     }
   };
+  playerSelect(input){
+    if (input === 1) {
+      console.log("locTest1");
+      let player= this.state.Ships1;
+      return player;
+    } else if (input === 2) {
+      let player = this.state.Ships2;
+      return player;
+    }
+  }
+  generateLocations(input){
+    var user = this.playerSelect(input);
+    for (var s=0; s<user.length; s++){
+      let shipType = user[s].name;
+      let shipSize = user[s].size;
+      let shipLocs = user[s].locations;
+      console.log("for player1's ", shipType, " it has a size of ", shipSize, " at locations: ", shipLocs);
+    }
+  }
 
   dirGen() {
     let $direction = Math.floor((Math.random() * 4) + 1);
@@ -89,6 +109,10 @@ class Battleship extends React.Component {
   startGame(){
     this.createGrid();
     this.drawBoard();
+    this.shipList(1);
+    this.shipList(2);
+    this.generateLocations(1);
+    // this.drawBoard();
   }
 
   drawBoard(){
@@ -126,19 +150,11 @@ class Battleship extends React.Component {
     let gridCol = Number(col);
     let colNum = gridCol+1;
     let cellNum = this.state.grid[gridRowNum][gridCol];
-    // let cellContent = str(cellNum);
     var newBlock = document.createElement("div");
-    // newBlock.setAttribute("data-row", rowNum);
     newBlock.setAttribute("data-col", colNum);
     newBlock.innerHTML = cellNum;
     gridRow.appendChild(newBlock);
   }
-
-
-
-// viewBoard(){
-//
-// }
 
   render() {
     return(
