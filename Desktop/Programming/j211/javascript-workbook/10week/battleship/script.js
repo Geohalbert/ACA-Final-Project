@@ -20,6 +20,8 @@ class Battleship extends React.Component {
     this.drawBlocks = this.drawBlocks.bind(this);
     this.generateLocations = this.generateLocations.bind(this);
     this.playerSelect = this.playerSelect.bind(this);
+    this.occupiedList = this.occupiedList.bind(this);
+    this.updataShips = this.updateShips.bind(this);
   }
 
   shipList(player){
@@ -63,7 +65,6 @@ class Battleship extends React.Component {
   };
   playerSelect(input){
     if (input === 1) {
-      console.log("locTest1");
       let player= this.state.Ships1;
       return player;
     } else if (input === 2) {
@@ -71,18 +72,211 @@ class Battleship extends React.Component {
       return player;
     }
   }
-  generateLocations(input){
-    var user = this.playerSelect(input);
-    for (var s=0; s<user.length; s++){
-      let shipType = user[s].name;
-      let shipSize = user[s].size;
-      let shipLocs = user[s].locations;
-      console.log("for player1's ", shipType, " it has a size of ", shipSize, " at locations: ", shipLocs);
+  occupiedList(input){
+    if (input === 1) {
+      let occupied= this.state.occupied1;
+      return occupied;
+    } else if (input === 2) {
+      let occupied = this.state.occupied2;
+      return occupied;
     }
   }
 
+  updateShips(input,user,occupied){
+    if (input === 1) {
+      const newShips1 = {
+        Ships1: user,
+        occupied1: occupied
+      }
+      this.setState(newShips1);
+    } else if (input === 2) {
+      const newState = {
+        Ships2: user,
+        occupied2: occupied
+      }
+      this.setState(newState);
+    }
+  }
+
+  generateLocations(input){
+    var user = this.playerSelect(input);
+    var occupied = this.occupiedList(input);
+    for (var i=0; i<user.length; i++){
+      //assigning variables for rest of function
+      let places, $place, maxSpacesNorth, maxSpacesEast, maxSpacesSouth, maxSpacesWest, posSpacesNorth, posSpacesEast, posSpacesSouth, posSpacesWest, addNew, addNorth, addEast, addSouth, addWest, thisRowEast, thisRowMax, thisRowWest, thisRowMin;
+      let shipType = user[i].name;
+      let shipSize = user[i].size;
+      let shipLocs = user[i].locations;
+      let shipHits = user[i].hits;
+      let $initialLocation = Math.floor((Math.random() * 100) + 1);
+      maxSpacesNorth = ($initialLocation - ((shipSize-1)*10));
+      maxSpacesSouth = ($initialLocation + ((shipSize-1)*10));
+      maxSpacesWest = ($initialLocation - (shipSize-1));
+      maxSpacesEast = ($initialLocation + shipSize-1);
+      let $direction = this.dirGen();
+      console.log("Testing initial location for ",shipType, " at: ", $initialLocation);
+      // if the initial location is already occcupied it restarts
+      if (occupied.includes($initialLocation) === false){
+        // if that space is empty the code continues. Here the code breaks up into directions that are returned by the dirGen function
+        places=[];
+
+// north direction(1)
+if ($direction === 1 && maxSpacesNorth > 0) {
+  console.log("direction is North");
+  // if (maxSpacesNorth > 0){
+  maxSpacesNorth = ($initialLocation - ((shipSize-1)*10));
+  posSpacesNorth = [];
+  addNew = [];
+  for (var s=0;s<shipSize;s++) {
+    $place = $initialLocation-(s*10);
+    if (occupied.includes($place) === false){
+      posSpacesNorth.push($place);
+      }
+    }console.log("length of posSpaces: "+posSpacesNorth.length+ ". length of ship: "+shipSize);
+    if (posSpacesNorth.length===shipSize){
+      for (var p=0;p<posSpacesNorth.length;p++){
+        addNorth= posSpacesNorth[p];
+        addNew= addNorth;
+        occupied.push(addNorth);
+        shipLocs.push(addNew);
+      }console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
+    }else if (posSpacesNorth.length<shipSize || (maxSpacesNorth < 0) ) {
+      i=i-1;
+      console.log("Will not fit, initial location removed");
+      }
+    }else if (maxSpacesNorth < 0)  {
+      i=i-1;
+      console.log("Will not fit, initial location removed");
+      }
+
+  // East direction (2)
+        else if ($direction === 2) {
+          console.log("direction is East");
+          thisRowEast = parseInt($initialLocation/10)+1;
+          if ($initialLocation%10 === 0) {
+            thisRowMax = (thisRowEast*10);
+            console.log("the row is " +thisRowEast);
+          }else if (($initialLocation%10 !== 0)) {
+            console.log("the row is " +thisRowEast);
+            thisRowMax = (thisRowEast*10)+10;
+          }
+          if (maxSpacesEast <= thisRowMax && (maxSpacesEast < 101)) {
+            console.log("Seeing if ship fits");
+            posSpacesEast = [];
+            addNew = [];
+            console.log("length of posSpaces: "+posSpacesEast.length+ ". length of ship: "+shipSize);
+            for (var s=0;s<shipSize;s++) {
+              $place = $initialLocation+s;
+              if (occupied.includes($place) === false){
+                posSpacesEast.push($place);
+              }
+            }if (posSpacesEast.length===shipSize){
+                  for (var p=0;p<posSpacesEast.length;p++){
+                    addEast= posSpacesEast[p];
+                    addNew= addEast;
+                    occupied.push(addEast);
+                    shipLocs.push(addNew);
+                  }console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
+            } else {
+                    i=i-1;
+                    console.log("Will not fit, initial location removed");
+                    }
+                  } else {
+                          i=i-1;
+                          console.log("Will not fit, initial location removed");
+                        }
+                }
+  // south direction (3)
+        else if ($direction === 3 && maxSpacesSouth < 101) {
+          console.log("direction is South");
+          posSpacesSouth = [];
+          addNew = [];
+          for (var s=0;s<shipSize;s++) {
+            $place = $initialLocation+(s*10);
+            if (occupied.includes($place) === false){
+              posSpacesSouth.push($place);
+              }
+          }console.log("length of posSpaces: "+posSpacesSouth.length+ ". length of ship: "+shipSize);
+          if (posSpacesSouth.length===shipSize){
+            for (var p=0;p<posSpacesSouth.length;p++){
+              addSouth= posSpacesSouth[p];
+              addNew= addSouth;
+              occupied.push(addSouth);
+              shipLocs.push(addNew);
+            }console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
+          }else if (posSpacesSouth.length!==shipSize || (maxSpacesSouth > 100) ) {
+              i=i-1;
+              console.log("Will not fit, initial location removed");
+            }
+          }
+
+  // West direction (4)
+        else if ($direction == 4) {
+          console.log("direction is West");
+          thisRowWest = parseInt($initialLocation/10);
+          if (thisRowWest === 0) {
+            thisRowWest === 1;
+          }else if (thisRowWest !== 0) {
+            thisRowWest = parseInt($initialLocation/10)+1;
+          }
+          console.log("the row is " +thisRowWest);
+          thisRowMin = ((thisRowWest*10)-9);
+          if (maxSpacesWest < thisRowMin || maxSpacesWest < 0) {
+            i=i-1;
+            console.log("Will not fit, initial location removed");
+          }else if (maxSpacesWest >= thisRowMin) {
+            posSpacesWest = [];
+            addNew = [];
+            for (var s=0;s<shipSize;s++) {
+              $place = $initialLocation-s;
+              if (occupied.includes($place) === false){
+                posSpacesWest.push($place);
+              }console.log("length of posSpaces: "+posSpacesWest.length+ ". length of ship: "+shipSize);
+            }
+              if (posSpacesWest.length===shipSize){
+                for (var p=0;p<posSpacesWest.length;p++){
+                addWest= posSpacesWest[p];
+                addNew= addWest;
+                occupied.push(addWest);
+                shipLocs.push(addNew);
+              }console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
+              }else {
+                i=i-1;
+                console.log("Will not fit, initial location removed");
+              }
+            }
+          }else {
+            i=i-1;
+            console.log("Will not fit, initial location removed");
+          }
+
+      }else {
+        i=i-1;
+        console.log("space occupied, initial location removed");
+      }
+    };
+    console.log("loop completed, user/Ships: ", user);
+    console.log("loop completed, occupied: ", occupied);
+    console.log("testing this.state before updateShips: ", this.state);
+    // this.updateShips(input,user,occupied);
+
+
+      // console.log("for player1's ", shipType, " it has a size of ", shipSize, " at locations: ", shipLocs);
+  }
+
+
+//determines the direction the ship will attempt to set from $initialLocation
   dirGen() {
     let $direction = Math.floor((Math.random() * 4) + 1);
+    if ($direction === 1) {
+      console.log("the direction is North");
+    } else if ($direction === 2) {
+      console.log("the direction is East");
+    } else if ($direction === 3) {
+      console.log("the direction is South");
+    } else if ($direction === 4) {
+      console.log("the direction is West");
+    }
     return $direction;
   };
 
@@ -112,6 +306,7 @@ class Battleship extends React.Component {
     this.shipList(1);
     this.shipList(2);
     this.generateLocations(1);
+    this.generateLocations(2);
     // this.drawBoard();
   }
 
