@@ -9,6 +9,39 @@
     vertical-align: inherit;
     border-color: inherit;
 }
+#ships {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+/* #player1ships {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: green;
+  text-align: center;
+  border: 2px solid;
+  border-color: black;
+  width: 400px;
+  height: 50px;
+  float: center;
+  padding: 5px
+}
+#player2ships {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: green;
+  text-align: center;
+  border: 2px solid;
+  border-color: black;
+  width: 400px;
+  height: 50px;
+  float: center;
+  padding: 5px
+} */
 
 [data-row] {
   display: flex;
@@ -22,6 +55,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: aliceblue;
   text-align: center;
   border: 3px solid;
   border-color: black;

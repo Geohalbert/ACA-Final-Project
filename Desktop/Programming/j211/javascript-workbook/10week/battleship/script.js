@@ -354,6 +354,24 @@ if ($direction === 1 && maxSpacesNorth > 0) {
   render() {
     return(
     <div id='game'>
+      <div id='ships'>
+        <div id='player1ships' className='row'>
+          <div>Ships: </div>
+          <div className='active'>Carrier</div>
+          <div className='active'>Battleship</div>
+          <div className='active'>Submarine</div>
+          <div className='active'>Destroyer</div>
+          <div className='active'>Patrol Boat</div>
+        </div>
+        <div id='player2ships' className='row'>
+          <div>Ships: </div>
+          <div className='active'>Carrier</div>
+          <div className='active'>Battleship</div>
+          <div className='active'>Submarine</div>
+          <div className='active'>Destroyer</div>
+          <div className='active'>Patrol Boat</div>
+        </div>
+      </div>
       <div  id='board' className="col">
       </div>
       <button onClick={this.startGame}>Start</button>
