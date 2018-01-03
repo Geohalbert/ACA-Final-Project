@@ -10,7 +10,8 @@ class Battleship extends React.Component {
       Ships1: [],
       Ships2: [],
       occupied1:[],
-      occupied2: []
+      occupied2: [],
+      turn: 0
     }
     this.shipList = this.shipList.bind(this);
     this.startGame = this.startGame.bind(this);
@@ -21,7 +22,26 @@ class Battleship extends React.Component {
     this.generateLocations = this.generateLocations.bind(this);
     this.playerSelect = this.playerSelect.bind(this);
     this.occupiedList = this.occupiedList.bind(this);
-    this.updataShips = this.updateShips.bind(this);
+    this.updateShips = this.updateShips.bind(this);
+    this.turnCounter = this.turnCounter.bind(this);
+  }
+
+  turnCounter(){
+    console.log("turnCounter test1");
+    let turn = this.state.turn;
+    var newturn= turn++;
+    console.log("turnCounter test2 - turn: ", turn);
+    if (turn%2 === 0){
+      console.log("turnCounter test3");
+      console.log("turnCounter test4");
+      const newState = {
+        turn: newturn
+      }
+      this.setState(newState);
+      return this.state.players[0];
+    }
+
+    }
   }
 
   shipList(player){
@@ -355,21 +375,21 @@ if ($direction === 1 && maxSpacesNorth > 0) {
     return(
     <div id='game'>
       <div id='ships'>
-        <div id='player1ships' className='row'>
-          <div>Ships: </div>
-          <div className='active'>Carrier</div>
-          <div className='active'>Battleship</div>
-          <div className='active'>Submarine</div>
-          <div className='active'>Destroyer</div>
-          <div className='active'>Patrol Boat</div>
+        <div id='player1ships'>
+          <div>Player 1: </div>
+          <div className='activeship'>Carrier</div>
+          <div className='activeship'>Battleship</div>
+          <div className='activeship'>Submarine</div>
+          <div className='activeship'>Destroyer</div>
+          <div className='activeship'>Patrol Boat</div>
         </div>
-        <div id='player2ships' className='row'>
-          <div>Ships: </div>
-          <div className='active'>Carrier</div>
-          <div className='active'>Battleship</div>
-          <div className='active'>Submarine</div>
-          <div className='active'>Destroyer</div>
-          <div className='active'>Patrol Boat</div>
+        <div id='player2ships'>
+          <div>Player 2: </div>
+          <div className='activeship'>Carrier</div>
+          <div className='activeship'>Battleship</div>
+          <div className='activeship'>Submarine</div>
+          <div className='activeship'>Destroyer</div>
+          <div className='activeship'>Patrol Boat</div>
         </div>
       </div>
       <div  id='board' className="col">

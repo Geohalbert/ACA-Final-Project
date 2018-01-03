@@ -14,34 +14,32 @@
   flex-direction: row;
   text-align: center;
   align-items: center;
+  flex-flow: space-between;
   justify-content: center;
 }
-/* #player1ships {
+#player1ships {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  background-color: green;
   text-align: center;
+  flex-flow: space-between;
   border: 2px solid;
-  border-color: black;
-  width: 400px;
-  height: 50px;
   float: center;
-  padding: 5px
 }
 #player2ships {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  background-color: green;
   text-align: center;
+  flex-flow: space-between;
   border: 2px solid;
   border-color: black;
-  width: 400px;
-  height: 50px;
   float: center;
-  padding: 5px
-} */
+}
+.activeship{
+  background-color: green;
+  margin: 5px;
+}
 
 [data-row] {
   display: flex;
