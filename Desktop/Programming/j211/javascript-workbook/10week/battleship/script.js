@@ -11,7 +11,7 @@ class Battleship extends React.Component {
       Ships2: undefined,
       occupied1:[],
       occupied2: [],
-      turn: 0
+      turn: undefined
     }
     this.startGame = this.startGame.bind(this);
     this.drawBoard = this.drawBoard.bind(this);
@@ -27,7 +27,7 @@ class Battleship extends React.Component {
 
 //creates the grid for board
   componentWillMount() {
-    let grid;
+    let grid, turn;
     var row1=[1,2,3,4,5,6,7,8,9,10];
     var row2=[11,12,13,14,15,16,17,18,19,20];
     var row3=[21,22,23,24,25,26,27,28,29,30];
@@ -40,11 +40,13 @@ class Battleship extends React.Component {
     var row10=[91,92,93,94,95,96,97,98,99,100];
     var newGrid=[row1,row2,row3,row4,row5,row6,row7,row8,row9,row10];
     grid = newGrid;
+    turn = 1;
     this.setState({ grid });
     let Ships1 = this.shipList();
     let Ships2 = this.shipList();
     this.setState({Ships1});
     this.setState({Ships2});
+    this.setState({turn});
   }
 
   shipList(){
@@ -80,19 +82,19 @@ class Battleship extends React.Component {
   startGame(){
     this.generateLocations(1);
     this.generateLocations(2);
+    this.state.turn++;
+    this.userDisplay();
   }
 
   componentDidMount(){
     console.log("this.state for componentDidMount: ",this.state)
     this.drawBoard();
-    this.setState((state) => ({ turn: state.turn + 1}));
-    this.userDisplay();
-
   }
 
 
 
   drawBoard(){
+
     if (this.state.grid.length > 0){
       let boardGrid = this.state.grid;
       for (var r=0; r<this.state.grid.length; r++){
