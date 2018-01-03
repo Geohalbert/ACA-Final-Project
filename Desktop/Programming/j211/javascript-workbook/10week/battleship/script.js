@@ -40,8 +40,14 @@ class Battleship extends React.Component {
     var newGrid=[row1,row2,row3,row4,row5,row6,row7,row8,row9,row10];
     grid = newGrid;
     this.setState({ grid });
-    let Ships1, Ships2;
-    let shipList = [
+    let Ships1 = this.shipList();
+    let Ships2 = this.shipList();
+    this.setState({Ships1});
+    this.setState({Ships2});
+  }
+
+  shipList(){
+    let ships = [
       {name: "Aircraft Carrier",
         size: 5,
         locations: [],
@@ -67,10 +73,7 @@ class Battleship extends React.Component {
         locations: [],
         hits: ["", ""]
       }];
-    Ships1 = shipList;
-    this.setState({Ships1});
-    Ships2 = shipList;
-    this.setState({Ships2});
+    return ships;
   }
 
   startGame(){
@@ -198,7 +201,7 @@ class Battleship extends React.Component {
         // if that space is empty the code continues. Here the code breaks up into directions that are returned by the dirGen function
         places=[];
 
-// north direction(1)
+        // north direction(1)
         if ($direction === 1 && maxSpacesNorth > 0) {
           console.log("direction is North");
           // if (maxSpacesNorth > 0){
@@ -227,7 +230,7 @@ class Battleship extends React.Component {
           console.log("Will not fit, initial location removed");
         }
 
-  // East direction (2)
+        // East direction (2)
         else if ($direction === 2) {
           console.log("direction is East");
           thisRowEast = parseInt($initialLocation/10)+1;
@@ -264,7 +267,7 @@ class Battleship extends React.Component {
             console.log("Will not fit, initial location removed");
           }
         }
-  // south direction (3)
+        // south direction (3)
         else if ($direction === 3 && maxSpacesSouth < 101) {
           console.log("direction is South");
           posSpacesSouth = [];
@@ -288,7 +291,7 @@ class Battleship extends React.Component {
           }
         }
 
-  // West direction (4)
+        // West direction (4)
         else if ($direction == 4) {
           console.log("direction is West");
           thisRowWest = parseInt($initialLocation/10);
