@@ -5,7 +5,7 @@ class Battleship extends React.Component {
     super(props);
 
     this.state = {
-      grid: [],
+      grid: null,
       players: ["player1", "player2"],
       Ships1: [],
       Ships2: [],
@@ -41,7 +41,6 @@ class Battleship extends React.Component {
       return this.state.players[0];
     }
 
-    }
   }
 
   shipList(player){
@@ -300,7 +299,7 @@ if ($direction === 1 && maxSpacesNorth > 0) {
     return $direction;
   };
 
-  createGrid() {
+  componentWillMount() {
     var row1=[1,2,3,4,5,6,7,8,9,10];
     var row2=[11,12,13,14,15,16,17,18,19,20];
     var row3=[21,22,23,24,25,26,27,28,29,30];
@@ -314,20 +313,21 @@ if ($direction === 1 && maxSpacesNorth > 0) {
     var newGrid=[row1,row2,row3,row4,row5,row6,row7,row8,row9,row10];
     console.log('grid: ', newGrid);
     console.log('grid.length: ', newGrid.length);
-    const newState = {
-      grid: newGrid
-    }
-    this.setState(newState);
+    // const newState = {
+    //   grid: newGrid
+    // }
+    this.setState((newGrid) => ({ grid: newGrid}));
   }
 
   startGame(){
-    this.createGrid();
+    // this.createGrid();
+    let startup = this.state.grid.length;
+    console.log('this.state.grid.length: ', startup)
     this.drawBoard();
     this.shipList(1);
     this.shipList(2);
     this.generateLocations(1);
     this.generateLocations(2);
-    // this.drawBoard();
   }
 
   drawBoard(){
@@ -344,6 +344,10 @@ if ($direction === 1 && maxSpacesNorth > 0) {
       console.log('newRows after for loop: ',board);
       return board
     }
+    // else {
+    //   console.log("HERE IS THE PROBLEM");
+    //   this.startGame();
+    // }
   }
 
   drawRow(rowNum) {
