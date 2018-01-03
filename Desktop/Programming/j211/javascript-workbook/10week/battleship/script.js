@@ -22,6 +22,7 @@ class Battleship extends React.Component {
     this.occupiedList = this.occupiedList.bind(this);
     this.updateShips = this.updateShips.bind(this);
     this.turnCounter = this.turnCounter.bind(this);
+    this.userDisplay = this.userDisplay.bind(this);
   }
 
 //creates the grid for board
@@ -51,27 +52,27 @@ class Battleship extends React.Component {
       {name: "Aircraft Carrier",
         size: 5,
         locations: [],
-        hits: ["", ""]
+        hits: []
       },
       {name: "Battleship",
         size: 4,
         locations: [],
-        hits: ["", ""]
+        hits: []
       },
       {name: "Submarine",
         size: 3,
         locations: [],
-        hits: ["", ""]
+        hits: []
       },
       {name: "Destroyer",
         size: 3,
         locations: [],
-        hits: ["", ""]
+        hits: []
       },
       {name: "Patrol Boat",
         size: 2,
         locations: [],
-        hits: ["", ""]
+        hits: []
       }];
     return ships;
   }
@@ -84,21 +85,21 @@ class Battleship extends React.Component {
   componentDidMount(){
     console.log("this.state for componentDidMount: ",this.state)
     this.drawBoard();
+    this.setState((state) => ({ turn: state.turn + 1}));
+    this.userDisplay();
+
   }
 
+
+
   drawBoard(){
-    console.log('test 2 for this.state.grid: ', this.state.grid);
-    console.log('drawboard test 1');
     if (this.state.grid.length > 0){
-      console.log('drawboard test 2')
       let boardGrid = this.state.grid;
       for (var r=0; r<this.state.grid.length; r++){
         let gridRow = r;
         let rowNum = r+1;
         this.drawRow(rowNum);
       }
-      // console.log('newRows after for loop: ',board);
-      // return board
     }
   }
 
@@ -143,6 +144,37 @@ class Battleship extends React.Component {
     }
   }
 
+  drawBlocks(rowNum,rowID,col){
+    let gridRowNum = Number(rowNum-1);
+    var gridRow = document.getElementById(rowID);
+    let gridCol = Number(col);
+    let colNum = gridCol+1;
+    let cellNum = this.state.grid[gridRowNum][gridCol];
+    var newBlock = document.createElement("div");
+    newBlock.setAttribute("data-col", colNum);
+    newBlock.innerHTML = cellNum;
+    gridRow.appendChild(newBlock);
+  }
+
+  userDisplay(){
+    var turnDiv = document.getElementById('playerTurn');
+    var playerDiv = document.createElement("div");
+    playerDiv.setAttribute("id", "playerDiv");
+    playerDiv.innerHTML = "Player's turn:";
+    turnDiv.appendChild(playerDiv);
+    var currentPlayerDiv = document.createElement("div");
+    let userTurn = this.state.turn;
+    if (userTurn%2 === 0 && userTurn > 1){
+      currentPlayerDiv.innerHTML = "Player1";
+      turnDiv.appendChild(currentPlayerDiv);
+    } else if (userTurn%2 !== 0 && userTurn > 1){
+      currentPlayerDiv.innerHTML = "Player2";
+      turnDiv.appendChild(currentPlayerDiv);
+    } else if (userTurn === 1) {
+      currentPlayerDiv.innerHTML = "N/A";
+      turnDiv.appendChild(currentPlayerDiv);
+    }
+  }
 
   playerSelect(input){
     if (input === 1) {
@@ -338,7 +370,7 @@ class Battleship extends React.Component {
     };
     console.log("loop completed, user/Ships: ", user);
     console.log("loop completed, occupied: ", occupied);
-    console.log("testing this.state before updateShips: ", this.state);
+    // console.log("testing this.state before updateShips: ", this.state);
     // this.updateShips(input,user,occupied);
 
 
@@ -385,7 +417,7 @@ class Battleship extends React.Component {
       </div>
       <div  id='board' className="col">
       </div>
-      <button onClick={this.startGame}>Start</button>
+      <button id='start' onClick={this.startGame}>Start</button>
     </div>
     )
   }

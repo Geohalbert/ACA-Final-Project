@@ -17,6 +17,16 @@
   flex-flow: space-between;
   justify-content: center;
 }
+#playerTurn {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  flex-flow: space-between;
+  justify-content: center;
+  border: 3px solid;
+  border-color: red;
+}
 #player1ships {
   display: flex;
   flex-direction: row;
