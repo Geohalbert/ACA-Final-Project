@@ -40,7 +40,7 @@ class Battleship extends React.Component {
     var row10=[91,92,93,94,95,96,97,98,99,100];
     var newGrid=[row1,row2,row3,row4,row5,row6,row7,row8,row9,row10];
     grid = newGrid;
-    turn = 1;
+    turn = 0;
     this.setState({ grid });
     let Ships1 = this.shipList();
     let Ships2 = this.shipList();
@@ -159,22 +159,24 @@ class Battleship extends React.Component {
   }
 
   userDisplay(){
-    var turnDiv = document.getElementById('playerTurn');
-    var playerDiv = document.createElement("div");
-    playerDiv.setAttribute("id", "playerDiv");
-    playerDiv.innerHTML = "Player's turn:";
-    turnDiv.appendChild(playerDiv);
-    var currentPlayerDiv = document.createElement("div");
     let userTurn = this.state.turn;
-    if (userTurn%2 === 0 && userTurn > 1){
-      currentPlayerDiv.innerHTML = "Player1";
+    var turnDiv = document.getElementById('playerTurn');
+    if (userTurn === 1) {
+      var newPlayerDiv = document.createElement("div");
+      newPlayerDiv.setAttribute("id", "playerDiv");
+      newPlayerDiv.innerHTML = "Player's turn:";
+      turnDiv.appendChild(newPlayerDiv);
+      var currentPlayerDiv = document.createElement("div");
+      currentPlayerDiv.setAttribute("id", 'currentPlayer');
+      currentPlayerDiv.innerHTML = "Player 1"
       turnDiv.appendChild(currentPlayerDiv);
-    } else if (userTurn%2 !== 0 && userTurn > 1){
-      currentPlayerDiv.innerHTML = "Player2";
-      turnDiv.appendChild(currentPlayerDiv);
-    } else if (userTurn === 1) {
-      currentPlayerDiv.innerHTML = "N/A";
-      turnDiv.appendChild(currentPlayerDiv);
+    } else if (userTurn > 1){
+      var updatePlayerDiv = document.getElementById('currentPlayer');
+      if (userTurn%2 === 0){
+        updatePlayerDiv.innerHTML = "Player 2";
+      } else if (userTurn%2 !== 0){
+        updatePlayerDiv.innerHTML = "Player 1";
+      }
     }
   }
 
@@ -229,7 +231,7 @@ class Battleship extends React.Component {
       maxSpacesWest = ($initialLocation - (shipSize-1));
       maxSpacesEast = ($initialLocation + shipSize-1);
       let $direction = this.dirGen();
-      console.log("Testing initial location for ",shipType, " at: ", $initialLocation);
+      // console.log("Testing initial location for ",shipType, " at: ", $initialLocation);
       // if the initial location is already occcupied it restarts
       if (occupied.includes($initialLocation) === false){
         // if that space is empty the code continues. Here the code breaks up into directions that are returned by the dirGen function
@@ -237,7 +239,7 @@ class Battleship extends React.Component {
 
         // north direction(1)
         if ($direction === 1 && maxSpacesNorth > 0) {
-          console.log("direction is North");
+          // console.log("direction is North");
           // if (maxSpacesNorth > 0){
           maxSpacesNorth = ($initialLocation - ((shipSize-1)*10));
           posSpacesNorth = [];
@@ -247,39 +249,41 @@ class Battleship extends React.Component {
             if (occupied.includes($place) === false){
               posSpacesNorth.push($place);
             }
-          }console.log("length of posSpaces: "+posSpacesNorth.length+ ". length of ship: "+shipSize);
+          }
+          // console.log("length of posSpaces: "+posSpacesNorth.length+ ". length of ship: "+shipSize);
           if (posSpacesNorth.length===shipSize){
             for (var p=0;p<posSpacesNorth.length;p++){
               addNorth= posSpacesNorth[p];
               addNew= addNorth;
               occupied.push(addNorth);
               shipLocs.push(addNew);
-            }console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
+            }
+            // console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
           }else if (posSpacesNorth.length<shipSize || (maxSpacesNorth < 0) ) {
             i=i-1;
-            console.log("Will not fit, initial location removed");
+            // console.log("Will not fit, initial location removed");
           }
         }else if (maxSpacesNorth < 0)  {
           i=i-1;
-          console.log("Will not fit, initial location removed");
+          // console.log("Will not fit, initial location removed");
         }
 
         // East direction (2)
         else if ($direction === 2) {
-          console.log("direction is East");
+          // console.log("direction is East");
           thisRowEast = parseInt($initialLocation/10)+1;
           if ($initialLocation%10 === 0) {
             thisRowMax = (thisRowEast*10);
-            console.log("the row is " +thisRowEast);
+            // console.log("the row is " +thisRowEast);
           }else if (($initialLocation%10 !== 0)) {
-            console.log("the row is " +thisRowEast);
+            // console.log("the row is " +thisRowEast);
             thisRowMax = (thisRowEast*10)+10;
           }
           if (maxSpacesEast <= thisRowMax && (maxSpacesEast < 101)) {
-            console.log("Seeing if ship fits");
+            // console.log("Seeing if ship fits");
             posSpacesEast = [];
             addNew = [];
-            console.log("length of posSpaces: "+posSpacesEast.length+ ". length of ship: "+shipSize);
+            // console.log("length of posSpaces: "+posSpacesEast.length+ ". length of ship: "+shipSize);
             for (var s=0;s<shipSize;s++) {
               $place = $initialLocation+s;
               if (occupied.includes($place) === false){
@@ -291,19 +295,20 @@ class Battleship extends React.Component {
                 addNew= addEast;
                 occupied.push(addEast);
                 shipLocs.push(addNew);
-              }console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
+              }
+              // console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
             } else {
               i=i-1;
-              console.log("Will not fit, initial location removed");
+              // console.log("Will not fit, initial location removed");
             }
           } else {
             i=i-1;
-            console.log("Will not fit, initial location removed");
+            // console.log("Will not fit, initial location removed");
           }
         }
         // south direction (3)
         else if ($direction === 3 && maxSpacesSouth < 101) {
-          console.log("direction is South");
+          // console.log("direction is South");
           posSpacesSouth = [];
           addNew = [];
           for (var s=0;s<shipSize;s++) {
@@ -311,34 +316,36 @@ class Battleship extends React.Component {
             if (occupied.includes($place) === false){
               posSpacesSouth.push($place);
             }
-          }console.log("length of posSpaces: "+posSpacesSouth.length+ ". length of ship: "+shipSize);
+          }
+          // console.log("length of posSpaces: "+posSpacesSouth.length+ ". length of ship: "+shipSize);
           if (posSpacesSouth.length===shipSize){
             for (var p=0;p<posSpacesSouth.length;p++){
               addSouth= posSpacesSouth[p];
               addNew= addSouth;
               occupied.push(addSouth);
               shipLocs.push(addNew);
-            }console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
+            }
+            // console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
           }else if (posSpacesSouth.length!==shipSize || (maxSpacesSouth > 100) ) {
             i=i-1;
-            console.log("Will not fit, initial location removed");
+            // console.log("Will not fit, initial location removed");
           }
         }
 
         // West direction (4)
         else if ($direction == 4) {
-          console.log("direction is West");
+          // console.log("direction is West");
           thisRowWest = parseInt($initialLocation/10);
           if (thisRowWest === 0) {
             thisRowWest === 1;
           }else if (thisRowWest !== 0) {
             thisRowWest = parseInt($initialLocation/10)+1;
           }
-          console.log("the row is " +thisRowWest);
+          // console.log("the row is " +thisRowWest);
           thisRowMin = ((thisRowWest*10)-9);
           if (maxSpacesWest < thisRowMin || maxSpacesWest < 0) {
             i=i-1;
-            console.log("Will not fit, initial location removed");
+            // console.log("Will not fit, initial location removed");
           }else if (maxSpacesWest >= thisRowMin) {
             posSpacesWest = [];
             addNew = [];
@@ -346,7 +353,8 @@ class Battleship extends React.Component {
               $place = $initialLocation-s;
               if (occupied.includes($place) === false){
                 posSpacesWest.push($place);
-              }console.log("length of posSpaces: "+posSpacesWest.length+ ". length of ship: "+shipSize);
+              }
+              // console.log("length of posSpaces: "+posSpacesWest.length+ ". length of ship: "+shipSize);
             }
             if (posSpacesWest.length===shipSize){
               for (var p=0;p<posSpacesWest.length;p++){
@@ -354,20 +362,21 @@ class Battleship extends React.Component {
                 addNew= addWest;
                 occupied.push(addWest);
                 shipLocs.push(addNew);
-              }console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
+              }
+              // console.log("It fits, current occupied spaces: "+occupied +'length: '+ occupied.length);
             }else {
               i=i-1;
-              console.log("Will not fit, initial location removed");
+              // console.log("Will not fit, initial location removed");
             }
           }
         }else {
           i=i-1;
-          console.log("Will not fit, initial location removed");
+          // console.log("Will not fit, initial location removed");
         }
 
       }else {
         i=i-1;
-        console.log("space occupied, initial location removed");
+        // console.log("space occupied, initial location removed");
       }
     };
     console.log("loop completed, user/Ships: ", user);
@@ -383,15 +392,15 @@ class Battleship extends React.Component {
 //determines the direction the ship will attempt to set from $initialLocation
   dirGen() {
     let $direction = Math.floor((Math.random() * 4) + 1);
-    if ($direction === 1) {
-      console.log("the direction is North");
-    } else if ($direction === 2) {
-      console.log("the direction is East");
-    } else if ($direction === 3) {
-      console.log("the direction is South");
-    } else if ($direction === 4) {
-      console.log("the direction is West");
-    }
+    // if ($direction === 1) {
+    //   console.log("the direction is North");
+    // } else if ($direction === 2) {
+    //   console.log("the direction is East");
+    // } else if ($direction === 3) {
+    //   console.log("the direction is South");
+    // } else if ($direction === 4) {
+    //   console.log("the direction is West");
+    // }
     return $direction;
   };
 

@@ -22,7 +22,8 @@
   flex-direction: row;
   text-align: center;
   align-items: center;
-  flex-flow: space-between;
+  width: 250px;
+  /* flex-flow: space-between; */
   justify-content: center;
   border: 3px solid;
   border-color: red;
