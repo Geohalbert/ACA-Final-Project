@@ -126,6 +126,7 @@ class Battleship extends React.Component {
     let cellNum = this.state.grid[gridRowNum][gridCol];
     var newBlock = document.createElement("div");
     newBlock.setAttribute("data-col", colNum);
+    newBlock.setAttribute("onClick", 'missle');
     newBlock.innerHTML = cellNum;
     gridRow.appendChild(newBlock);
   }
@@ -403,6 +404,14 @@ class Battleship extends React.Component {
     // }
     return $direction;
   };
+
+  missle(){
+    let userTurn = this.state.turn;
+    if (userTurn > 0){
+      let getUser = document.getElementById('currentPlayer').innerHTML;
+      console.log('innerHTML attempt: ', getUser);
+    }
+ }
 
   render() {
     return(
