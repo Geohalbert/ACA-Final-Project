@@ -14,9 +14,9 @@ class Battleship extends React.Component {
       turn: undefined
     }
     this.startGame = this.startGame.bind(this);
-    // this.drawBoard = this.drawBoard.bind(this);
-    // this.drawRow = this.drawRow.bind(this);
-    // this.drawBlocks = this.drawBlocks.bind(this);
+    this.drawBoard = this.drawBoard.bind(this);
+    this.drawRow = this.drawRow.bind(this);
+    this.drawBlocks = this.drawBlocks.bind(this);
     this.generateLocations = this.generateLocations.bind(this);
     this.playerSelect = this.playerSelect.bind(this);
     this.occupiedList = this.occupiedList.bind(this);
@@ -25,18 +25,6 @@ class Battleship extends React.Component {
     this.userDisplay = this.userDisplay.bind(this);
     this.missle = this.missle.bind(this);
   }
-
-
-  // "row1":[1,2,3,4,5,6,7,8,9,10],
-  // "row2":[11,12,13,14,15,16,17,18,19,20],
-  // "row3":[21,22,23,24,25,26,27,28,29,30],
-  // "row4":[31,32,33,34,35,36,37,38,39,40],
-  // "row5":[41,42,43,44,45,46,47,48,49,50],
-  // "row6":[51,52,53,54,55,56,57,58,59,60],
-  // "row7":[61,62,63,64,65,66,67,68,69,70],
-  // "row8":[71,72,73,74,75,76,77,78,79,80],
-  // "row9":[81,82,83,84,85,86,87,88,89,90],
-  // "row10":[91,92,93,94,95,96,97,98,99,100]
 
 //creates the grid for board
   componentWillMount() {
@@ -101,12 +89,12 @@ class Battleship extends React.Component {
 
   componentDidMount(){
     console.log("this.state for componentDidMount: ",this.state)
-    // this.drawBoard();
+    this.drawBoard();
   }
 
 
 
-  // drawBoard(){
+  drawBoard(){
     // MIGHT BE MORE EFFECTIVE TO HAVE THE RENDER DISPLAY THE STATE LIKE WE DID IN 08/fetch
   //
   //   render(){
@@ -123,42 +111,42 @@ class Battleship extends React.Component {
   //   }
   // }
 
-  //
-  //   if (this.state.grid.length > 0){
-  //     let boardGrid = this.state.grid;
-  //     for (var r=0; r<this.state.grid.length; r++){
-  //       let gridRow = r;
-  //       let rowNum = r+1;
-  //       this.drawRow(rowNum);
-  //     }
-  //   }
-  // }
 
-  // drawRow(rowNum) {
-  //   var board = document.getElementById('board');
-  //   var newRow = document.createElement("div");
-  //   var rowID = "row"+rowNum;
-  //   newRow.setAttribute("data-row", rowNum);
-  //   newRow.setAttribute("class", "row");
-  //   newRow.setAttribute("id", rowID);
-  //   board.appendChild(newRow);
-  //   for (var c=0; c<10; c++) {
-  //     this.drawBlocks(rowNum,rowID,c);
-  //   }
-  // }
-  //
-  // drawBlocks(rowNum,rowID,col){
-  //   let gridRowNum = Number(rowNum-1);
-  //   var gridRow = document.getElementById(rowID);
-  //   let gridCol = Number(col);
-  //   let colNum = gridCol+1;
-  //   let cellNum = this.state.grid[gridRowNum][gridCol];
-  //   var newBlock = document.createElement("div");
-  //   newBlock.setAttribute("data-col", colNum);
-  //   newBlock.onclick = missle();
-  //   newBlock.innerHTML = cellNum;
-  //   gridRow.appendChild(newBlock);
-  // }
+    if (this.state.grid.length > 0){
+      let boardGrid = this.state.grid;
+      for (var r=0; r<this.state.grid.length; r++){
+        let gridRow = r;
+        let rowNum = r+1;
+        this.drawRow(rowNum);
+      }
+    }
+  }
+
+  drawRow(rowNum) {
+    var board = document.getElementById('board');
+    var newRow = document.createElement("div");
+    var rowID = "row"+rowNum;
+    newRow.setAttribute("data-row", rowNum);
+    newRow.setAttribute("class", "row");
+    newRow.setAttribute("id", rowID);
+    board.appendChild(newRow);
+    for (var c=0; c<10; c++) {
+      this.drawBlocks(rowNum,rowID,c);
+    }
+  }
+
+  drawBlocks(rowNum,rowID,col){
+    let gridRowNum = Number(rowNum-1);
+    var gridRow = document.getElementById(rowID);
+    let gridCol = Number(col);
+    let colNum = gridCol+1;
+    let cellNum = this.state.grid[gridRowNum][gridCol];
+    var newBlock = document.createElement("div");
+    newBlock.setAttribute("data-col", colNum);
+    newBlock.onclick = missle();
+    newBlock.innerHTML = cellNum;
+    gridRow.appendChild(newBlock);
+  }
 
   turnCounter(){
     console.log("turnCounter test1");
@@ -176,23 +164,23 @@ class Battleship extends React.Component {
     }
   }
 
-  // drawBlocks(rowNum,rowID,col){
-  //   let gridRowNum = Number(rowNum-1);
-  //   var gridRow = document.getElementById(rowID);
-  //   let gridCol = Number(col);
-  //   let colNum = gridCol+1;
-  //   let cellNum = this.state.grid[gridRowNum][gridCol];
-  //   var newBlock = document.createElement("div");
-  //   var missle = this.missle();
-  //   newBlock.setAttribute("data-col", colNum);
-  //   newBlock.setAttribute("id", 'block');
-  //   newBlock.onclick = missle;
-  //   // newBlock.addEventListener("onclick", function(){
-  //   //   missle;
-  //   // });
-  //   newBlock.innerHTML = cellNum;
-  //   gridRow.appendChild(newBlock);
-  // }
+  drawBlocks(rowNum,rowID,col){
+    let gridRowNum = Number(rowNum-1);
+    var gridRow = document.getElementById(rowID);
+    let gridCol = Number(col);
+    let colNum = gridCol+1;
+    let cellNum = this.state.grid[gridRowNum][gridCol];
+    var newBlock = document.createElement("div");
+    var missle = this.missle();
+    newBlock.setAttribute("data-col", colNum);
+    newBlock.setAttribute("id", 'block');
+    newBlock.onclick = missle;
+    // newBlock.addEventListener("onclick", function(){
+    //   missle;
+    // });
+    newBlock.innerHTML = cellNum;
+    gridRow.appendChild(newBlock);
+  }
 
   userDisplay(){
     let userTurn = this.state.turn;
@@ -471,18 +459,8 @@ class Battleship extends React.Component {
           <div className='activeship'>Patrol Boat</div>
         </div>
       </div>
-      <div  id='board' className="col">{
-        this.state.grid.map((row, index)=> {
-          var rowArray = row;
-          var rowNum = index+1;
-          var rowID = 'row'+rowNum;
-          const newBlock = rowArray.map((block,key) =>{
-            return <div id='block' key={key} onClick={this.missle}>{block}</div>
-          });
-          return <div key={index} className='row'>{newBlock}</div>
-        })
-      }
-    </div>
+      <div  id='board' className="col">
+      </div>
       <button id='start' onClick={this.startGame}>Start</button>
     </div>
     )
