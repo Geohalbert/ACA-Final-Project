@@ -95,6 +95,22 @@ class Battleship extends React.Component {
 
 
   drawBoard(){
+    // MIGHT BE MORE EFFECTIVE TO HAVE THE RENDER DISPLAY THE STATE LIKE WE DID IN 08/fetch
+  //
+  //   render(){
+  //     this.initialDraw()
+  //     return(
+  //         <ul>
+  //         {
+  //           this.state.users.map((item, index) => {
+  //             return <li key={index} className="text-center">ID: {item.id}, Name: {item.last_name}, {item.first_name} <img src={item.avatar} className="img-thumbnail"></img></li>
+  //           })
+  //         }
+  //       </ul>
+  //     )
+  //   }
+  // }
+
 
     if (this.state.grid.length > 0){
       let boardGrid = this.state.grid;
@@ -155,12 +171,13 @@ class Battleship extends React.Component {
     let colNum = gridCol+1;
     let cellNum = this.state.grid[gridRowNum][gridCol];
     var newBlock = document.createElement("div");
-    var missle = this.missle()
+    var missle = this.missle();
     newBlock.setAttribute("data-col", colNum);
     newBlock.setAttribute("id", 'block');
-    newBlock.addEventListener("click", function(){
-      missle;
-    });
+    newBlock.onclick = missle;
+    // newBlock.addEventListener("onclick", function(){
+    //   missle;
+    // });
     newBlock.innerHTML = cellNum;
     gridRow.appendChild(newBlock);
   }
