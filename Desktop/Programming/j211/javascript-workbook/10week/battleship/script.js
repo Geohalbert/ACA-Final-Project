@@ -24,6 +24,7 @@ class Battleship extends React.Component {
     this.checkStrike = this.checkStrike.bind(this);
     this.shipHit = this.shipHit.bind(this);
     this.removeLoc = this.removeLoc.bind(this);
+    this.updateShip = this.updateShip.bind(this);
   }
 
   componentWillMount() {
@@ -148,6 +149,42 @@ class Battleship extends React.Component {
       let occupied = this.state.occupied2;
       return occupied;
     }
+  }
+
+  updateShip(user,location) {
+    console.log('updateShip test 1');
+    if (user === 'Player 1') {
+      console.log('updateShip Player 1 test 2');
+      var userShip = this.state.Ships1;
+      for (var i=0; i>4; i++){
+        console.log('updateShip Player 1 test 3');
+        let thisShipName = userShip[i].name;
+        let thisShipLocs = userShip[i].locations;
+        let thisShipHits = userShip[i].hits;
+        if (thisShipLocs.includes(location) === true){
+          console.log('updateShip Player 1 test 4');
+          let newShipLoc = this.removeLoc(thisShipLocs, location);
+          thisShipHits.push(location);
+          console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
+        }
+      }
+    } if (user === 'Player 2') {
+      console.log('updateShip Player 2 test 2');
+      var userShip = this.state.Ships2;
+      console.log('userShip- this.state.Ships2: ', userShip);
+      for (var i=0; i<4; i++){
+        console.log('updateShip Player 2 test 3');
+        let thisShipName = userShip[i].name;
+        let thisShipLocs = userShip[i].locations;
+        let thisShipHits = userShip[i].hits;
+        if (thisShipLocs.includes(location) === true){
+          console.log('updateShip Player 2 test 4');
+          let newShipLoc = this.removeLoc(thisShipLocs, location);
+          thisShipHits.push(location);
+          console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
+        }
+      }
+    } console.log('updateShip end of code');
   }
 
   updateShips(input,user,occupied){
@@ -355,21 +392,22 @@ class Battleship extends React.Component {
     return $direction;
   };
 
-removeLoc(arr,loc){
-  let locIndex = arr.indexOf(loc);
-  let spliced = arr.splice(locIndex,1);
-  return arr;
-}
+  removeLoc(arr,loc){
+    let locIndex = arr.indexOf(loc);
+    let spliced = arr.splice(locIndex,1);
+    return arr;
+  }
 
 // searchShips(userShips,hit) {
 //
 // }
 
-shipHit(hit, userHit,playerLocs){
+  shipHit(hit, userHit,playerLocs){
     console.log('occupied before hit: ',playerLocs);
     let newOccupied = this.removeLoc(playerLocs,hit);
+    this.updateShip(userHit, hit);
     console.log('occupied after hit: ',newOccupied);
-}
+  }
 
   checkStrike(user, guess){
     // console.log('guess.typeof(): ', guess.typeof());
