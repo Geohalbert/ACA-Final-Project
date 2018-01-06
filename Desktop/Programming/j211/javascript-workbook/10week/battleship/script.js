@@ -22,6 +22,8 @@ class Battleship extends React.Component {
     this.userDisplay = this.userDisplay.bind(this);
     this.missle = this.missle.bind(this);
     this.checkStrike = this.checkStrike.bind(this);
+    this.shipHit = this.shipHit.bind(this);
+    this.removeLoc = this.removeLoc.bind(this);
   }
 
   componentWillMount() {
@@ -353,6 +355,22 @@ class Battleship extends React.Component {
     return $direction;
   };
 
+removeLoc(arr,loc){
+  let locIndex = arr.indexOf(loc);
+  let spliced = arr.splice(locIndex,1);
+  return arr;
+}
+
+// searchShips(userShips,hit) {
+//
+// }
+
+shipHit(hit, userHit,playerLocs){
+    console.log('occupied before hit: ',playerLocs);
+    let newOccupied = this.removeLoc(playerLocs,hit);
+    console.log('occupied after hit: ',newOccupied);
+}
+
   checkStrike(user, guess){
     // console.log('guess.typeof(): ', guess.typeof());
     if (user === 'Player 1') {
@@ -360,22 +378,20 @@ class Battleship extends React.Component {
       console.log('player2Locs: ', player2Locs);
       if (player2Locs.includes(guess) === true){
         console.log(user +'has hit his opponents ship!');
-        this.state.turn++;
+        this.shipHit(guess,'Player 2', player2Locs);
       } else {
         console.log(user +' has missed!');
-        this.state.turn++;
-      }
+      }this.state.turn++;
     } else if (user === 'Player 2') {
       let player1Locs = this.state.occupied1;
       console.log('player2Locs: ', player1Locs);
       if (player1Locs.includes(guess) === true){
         console.log(user+' has hit his opponents ship!');
-        this.state.turn++;
+        this.shipHit(guess,'Player 1', player1Locs);
       } else {
         console.log(user+' has missed!');
-        this.state.turn++;
       }
-    }
+    }this.state.turn++;
   }
 
   missle(event){
