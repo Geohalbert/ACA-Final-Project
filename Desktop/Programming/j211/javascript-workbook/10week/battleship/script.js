@@ -21,6 +21,7 @@ class Battleship extends React.Component {
     this.turnCounter = this.turnCounter.bind(this);
     this.userDisplay = this.userDisplay.bind(this);
     this.missle = this.missle.bind(this);
+    this.checkStrike = this.checkStrike.bind(this);
   }
 
   componentWillMount() {
@@ -352,13 +353,45 @@ class Battleship extends React.Component {
     return $direction;
   };
 
-  missle(){
+  checkStrike(user, guess){
+    // console.log('guess.typeof(): ', guess.typeof());
+    if (user === 'Player 1') {
+      let player2Locs = this.state.occupied2;
+      console.log('player2Locs: ', player2Locs);
+      if (player2Locs.includes(guess) === true){
+        console.log(user +'has hit his opponents ship!');
+        this.state.turn++;
+      } else {
+        console.log(user +' has missed!');
+        this.state.turn++;
+      }
+    } else if (user === 'Player 2') {
+      let player1Locs = this.state.occupied1;
+      console.log('player2Locs: ', player1Locs);
+      if (player1Locs.includes(guess) === true){
+        console.log(user+' has hit his opponents ship!');
+        this.state.turn++;
+      } else {
+        console.log(user+' has missed!');
+        this.state.turn++;
+      }
+    }
+  }
+
+  missle(event){
     console.log('missle click test');
+    let dataBlockNum = event.target.getAttribute("data-block");
+    let guess = Number(dataBlockNum);
+    console.log('block number: ', guess);
     let turnCheck = this.state.turn;
     if (turnCheck> 0){
       var getUser = document.getElementById('currentPlayer').innerHTML;
       console.log('innerHTML attempt: ', getUser);
+      this.checkStrike(getUser, guess);
+    } else {
+      alert('press the start button to play!')
     }
+    this.userDisplay();
   }
 
   render() {
@@ -389,7 +422,7 @@ class Battleship extends React.Component {
           var rowNum = index+1;
           var rowID = 'row'+rowNum;
           const newBlock = rowArray.map((block,key) =>{
-            return <div id='block' key={key} onClick={this.missle}>{block}</div>
+            return <div id='block' data-block={block} key={key} onClick={this.missle} >{block}</div>
           });
           return <div key={index} className='row'>{newBlock}</div>
         })
@@ -398,7 +431,7 @@ class Battleship extends React.Component {
       <button id='start' onClick={this.startGame}>Start</button>
     </div>
     )
-  }
+}
 }
 
 
