@@ -28,6 +28,7 @@ class Battleship extends React.Component {
     this.rowMin = this.rowMin.bind(this);
     this.rowMax = this.rowMax.bind(this);
     this.renderShips = this.renderShips.bind(this);
+    this.checkWin = this.checkWin.bind(this);
   }
 
   rowMin(location){
@@ -186,7 +187,7 @@ class Battleship extends React.Component {
   updateShip(user,location) {
     if (user === 'Player 1') {
       var userShip = this.state.Ships1;
-      for (var i=0; i<4; i++){
+      for (var i=0; i<5; i++){
         let thisShipName = userShip[i].name;
         let thisShipLocs = userShip[i].locations;
         let thisShipHits = userShip[i].hits;
@@ -201,7 +202,7 @@ class Battleship extends React.Component {
       }
     } if (user === 'Player 2') {
       var userShip = this.state.Ships2;
-      for (var i=0; i<4; i++){
+      for (var i=0; i<5; i++){
         let thisShipName = userShip[i].name;
         let thisShipLocs = userShip[i].locations;
         let thisShipHits = userShip[i].hits;
@@ -398,6 +399,15 @@ class Battleship extends React.Component {
 // searchShips(userShips,hit) {
 //
 // }
+  checkWin(){
+    if (this.state.occupied1.length === 0) {
+      alert('Player 2 wins!');
+      this.state.status = "over";
+    } else if (this.state.occupied2.length === 0) {
+      alert('Player 1 wins!');
+      this.state.status = "over";
+    }
+  }
 
   shipHit(hit, userHit,playerLocs){
     let newOccupied = this.removeLoc(playerLocs,hit);
@@ -430,30 +440,36 @@ class Battleship extends React.Component {
   }
 
   missle(event){
-    this.state.status = 'playing';
-    var currentPlayer = document.getElementById('currentPlayer').innerHTML;
-    let dataBlockNum = event.target.getAttribute("data-block");
-    console.log('currentPlayer: ',currentPlayer);
-    var playerBoard = event.target.getAttribute("data-board");
-    console.log('playerBoard: ', playerBoard);
-    let guess = Number(dataBlockNum);
-    if (this.state.turn> 0){
-      if (currentPlayer === playerBoard) {
-        this.state.turn++;
-        var getUser = document.getElementById('currentPlayer').innerHTML;
-        let strike = this.checkStrike(getUser, guess);
-        if (strike){
-          event.target.style.backgroundColor = 'red';
+    if (this.state.status !== 'over'){
+      this.state.status = 'playing';
+      var currentPlayer = document.getElementById('currentPlayer').innerHTML;
+      let dataBlockNum = event.target.getAttribute("data-block");
+      console.log('currentPlayer: ',currentPlayer);
+      var playerBoard = event.target.getAttribute("data-board");
+      console.log('playerBoard: ', playerBoard);
+      let guess = Number(dataBlockNum);
+      if (this.state.turn> 0){
+        if (currentPlayer === playerBoard) {
+          this.state.turn++;
+          var getUser = document.getElementById('currentPlayer').innerHTML;
+          let strike = this.checkStrike(getUser, guess);
+          if (strike){
+            event.target.style.backgroundColor = 'red';
+            this.checkWin();
+          } else {
+            event.target.style.backgroundColor = 'white';
+          }
         } else {
-          event.target.style.backgroundColor = 'white';
+          alert("Click the other board!");
         }
       } else {
-        alert("Click the other board!");
+        alert('press the start button to play!')
       }
-    } else {
-      alert('press the start button to play!')
+      this.userDisplay();
+    } else if (this.state.status === 'over'){
+      alert('the game is over!');
     }
-    this.userDisplay();
+
   }
 
   renderShips(){
@@ -470,7 +486,7 @@ class Battleship extends React.Component {
       for (var s=0; s<2;s++){
         let thisUserShip = allShips[s];
         let thisShipDiv = allShipsDiv[s];
-        for (var i=0; i<4; i++){
+        for (var i=0; i<5; i++){
           let thisShipName = thisUserShip[i].name;
           let thisShipLocs = thisUserShip[i].locations;
           let uniqueNum = Number((s*10)+i);
@@ -486,7 +502,7 @@ class Battleship extends React.Component {
       for (var s=0; s<2;s++){
         let thisUserShip = allShips[s];
         let thisShipDiv = allShipsDiv[s];
-        for (var i=0; i<4; i++){
+        for (var i=0; i<5; i++){
           let thisShipName = thisUserShip[i].name;
           let thisShipLocs = thisUserShip[i].locations;
           let uniqueNum = Number((s*10)+i);
