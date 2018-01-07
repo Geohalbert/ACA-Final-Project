@@ -12,7 +12,7 @@ class Battleship extends React.Component {
       occupied1:[],
       occupied2: [],
       turn: undefined,
-      status: null
+      status: undefined
     }
     this.startGame = this.startGame.bind(this);
     this.generateLocations = this.generateLocations.bind(this);
@@ -65,15 +65,15 @@ class Battleship extends React.Component {
     var row10=[91,92,93,94,95,96,97,98,99,100];
     var newGrid=[row1,row2,row3,row4,row5,row6,row7,row8,row9,row10];
     grid = newGrid;
-    turn = 0;
-    status = 0;
-    this.setState({ status });
     this.setState({ grid });
+    turn = 0;
+    this.setState({turn});
+    status = 'start';
+    this.setState({status});
     let Ships1 = this.shipList();
     let Ships2 = this.shipList();
     this.setState({Ships1});
     this.setState({Ships2});
-    this.setState({turn});
   }
 
   shipList(){
@@ -110,7 +110,6 @@ class Battleship extends React.Component {
     this.generateLocations(1);
     this.generateLocations(2);
     this.state.turn = Math.floor((Math.random() * 2) + 1);
-    this.state.status++;
     this.userDisplay();
   }
 
@@ -139,9 +138,8 @@ class Battleship extends React.Component {
 
   userDisplay(){
     let userTurn = this.state.turn;
-    let gameStatus = this.state.status;
     var turnDiv = document.getElementById('playerTurn');
-    if ((gameStatus === 1) && (userTurn === 1 || userTurn === 2)) {
+    if (this.state.status === 'start') {
       var newPlayerDiv = document.createElement("div");
       newPlayerDiv.setAttribute("id", "playerDiv");
       newPlayerDiv.innerHTML = "Player's turn:";
@@ -150,7 +148,7 @@ class Battleship extends React.Component {
       currentPlayerDiv.setAttribute("id", 'currentPlayer');
       currentPlayerDiv.innerHTML = "Player 1"
       turnDiv.appendChild(currentPlayerDiv);
-    } else if (userTurn > 1){
+    } else {
       var updatePlayerDiv = document.getElementById('currentPlayer');
       if (userTurn%2 === 0){
         updatePlayerDiv.innerHTML = "Player 2";
@@ -190,6 +188,9 @@ class Battleship extends React.Component {
           let newShipLoc = this.removeLoc(thisShipLocs, location);
           thisShipHits.push(location);
           console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
+          if (thisShipLocs.length === 0) {
+
+          }
         }
       }
     } if (user === 'Player 2') {
@@ -433,10 +434,10 @@ class Battleship extends React.Component {
   }
 
   missle(event){
+    this.state.status = 'playing';
     let dataBlockNum = event.target.getAttribute("data-block");
     let guess = Number(dataBlockNum);
     if (this.state.turn> 0){
-      this.state.status++;
       this.state.turn++;
       var getUser = document.getElementById('currentPlayer').innerHTML;
       this.checkStrike(getUser, guess);
