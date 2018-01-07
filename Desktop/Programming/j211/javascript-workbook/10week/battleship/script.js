@@ -148,8 +148,13 @@ class Battleship extends React.Component {
       turnDiv.appendChild(newPlayerDiv);
       var currentPlayerDiv = document.createElement("div");
       currentPlayerDiv.setAttribute("id", 'currentPlayer');
-      currentPlayerDiv.innerHTML = "Player 1"
-      turnDiv.appendChild(currentPlayerDiv);
+      if (userTurn === 1){
+        currentPlayerDiv.innerHTML = "Player 1";
+        turnDiv.appendChild(currentPlayerDiv);
+      } else {
+        currentPlayerDiv.innerHTML = "Player 2";
+        turnDiv.appendChild(currentPlayerDiv);
+      }
     } else {
       var updatePlayerDiv = document.getElementById('currentPlayer');
       if (userTurn%2 === 0){
@@ -424,28 +429,45 @@ class Battleship extends React.Component {
       if (player2Locs.includes(guess) === true){
         console.log(user +'has hit his opponents ship!');
         this.shipHit(guess,'Player 2', player2Locs);
+        return true;
       } else {
         console.log(user +' has missed!');
+        return false;
       }
     } else if (user === 'Player 2') {
       let player1Locs = this.state.occupied1;
       if (player1Locs.includes(guess) === true){
         console.log(user+' has hit his opponents ship!');
         this.shipHit(guess,'Player 1', player1Locs);
+        return true;
       } else {
         console.log(user+' has missed!');
+        return false;
       }
     }
   }
 
   missle(event){
     this.state.status = 'playing';
+    var currentPlayer = document.getElementById('currentPlayer').innerHTML;
     let dataBlockNum = event.target.getAttribute("data-block");
+    console.log('currentPlayer: ',currentPlayer);
+    var playerBoard = event.target.getAttribute("data-board");
+    console.log('playerBoard: ', playerBoard);
     let guess = Number(dataBlockNum);
     if (this.state.turn> 0){
-      this.state.turn++;
-      var getUser = document.getElementById('currentPlayer').innerHTML;
-      this.checkStrike(getUser, guess);
+      if (currentPlayer === playerBoard) {
+        this.state.turn++;
+        var getUser = document.getElementById('currentPlayer').innerHTML;
+        let strike = this.checkStrike(getUser, guess);
+        if (strike){
+          event.target.style.backgroundColor = 'red';
+        } else {
+          event.target.style.backgroundColor = 'white';
+        }
+      } else {
+        alert("Click the other board!");
+      }
     } else {
       alert('press the start button to play!')
     }
@@ -458,7 +480,10 @@ class Battleship extends React.Component {
     let allShips = [p1Ships, p2Ships];
     var ships1Div = document.getElementById('player1ships');
     var ships2Div = document.getElementById('player2ships');
-    var allShipsDiv = [ships1Div,ships2Div];
+    //switched ships around
+    var allShipsDiv = [ships2Div,ships1Div];
+    var userMissle = [ships1Div,ships2Div];
+    var userShipHit = [ships2Div,ships1Div];
     if (this.state.status === 'start') {
       for (var s=0; s<2;s++){
         let thisUserShip = allShips[s];
@@ -496,30 +521,48 @@ class Battleship extends React.Component {
     <div id='game'>
       <div id='playerTurn' className='row'></div>
       <div id='ships'>
-        <div id='player1ships'>
-          <div>Player 1: </div>
-        </div>
-        <div id='player2ships'>
-          <div>Player 2: </div>
-        </div>
       </div>
-      <div  id='board' className="col">{
-        this.state.grid.map((row, index)=> {
-          var rowArray = row;
-          var rowNum = index+1;
-          var rowID = 'row'+rowNum;
-          const newBlock = rowArray.map((block,key) =>{
-            return <div id='block' data-block={block} key={key} onClick={this.missle} >{block}</div>
+      <div id='bothBoards' className='row'>
+    <div id='player1' className='col'>
+      <div id='player1ships'>
+        <div>Player 1: </div>
+      </div>
+      <div  id='board1' className="col">{
+        this.state.grid.map((row1, index1)=> {
+          var rowArray1 = row1;
+          var rowNum1 = index1+1;
+          var rowID1 = 'row'+rowNum1;
+          const newBlock1 = rowArray1.map((block,key) =>{
+            return <div id='block1' data-board='Player 1' data-block={block} key={key} onClick={this.missle} >{block}</div>
           });
-          return <div key={index} className='row'>{newBlock}</div>
+          return <div key={index1} className='row'>{newBlock1}</div>
         })
       }
     </div>
+  </div>
+  <div id='player2' className='col'>
+    <div id='player2ships'>
+      <div>Player 2: </div>
+    </div>
+    <div  id='board2' className="col">{
+      this.state.grid.map((row2, index2)=> {
+        var rowArray2 = row2;
+        var rowNum2 = index2+1;
+        var rowID2 = 'row'+rowNum2;
+        const newBlock2 = rowArray2.map((block,key) =>{
+          return <div id='block2' data-board='Player 2' data-block={block} key={key} onClick={this.missle} >{block}</div>
+        });
+        return <div key={index2} className='row'>{newBlock2}</div>
+      })
+    }
+  </div>
+</div>
+</div>
       <button id='start' onClick={this.startGame}>Start</button>
     </div>
     )
-}
+  }
 }
 
 
-  ReactDOM.render(<Battleship />, document.getElementById('react'));
+ReactDOM.render(<Battleship />, document.getElementById('react'));

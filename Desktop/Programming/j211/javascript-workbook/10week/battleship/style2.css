@@ -1,4 +1,11 @@
-#board {
+#board1 {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+#board2 {
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -84,14 +91,25 @@ th {
   width: 60px;
   background-color: white;
 }
-#block {
-  height: 60px;
-  width: 60px;
+#block1 {
+  height: 30px;
+  width: 30px;
   text-align: center;
   background-color: #0072ff;
   /* color: transparent; */
 }
-#block:hover {
+#block1:hover {
+  /* margin: 3px;  */
+  background-color: yellow;
+}
+#block2 {
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  background-color: #0072ff;
+  /* color: transparent; */
+}
+#block2:hover {
   /* margin: 3px;  */
   background-color: yellow;
 }
