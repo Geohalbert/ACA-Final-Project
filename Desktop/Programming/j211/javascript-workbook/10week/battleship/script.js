@@ -28,6 +28,7 @@ class Battleship extends React.Component {
     this.updateShip = this.updateShip.bind(this);
     this.rowMin = this.rowMin.bind(this);
     this.rowMax = this.rowMax.bind(this);
+    this.renderShips = this.renderShips.bind(this);
   }
 
   rowMin(location){
@@ -111,6 +112,7 @@ class Battleship extends React.Component {
     this.generateLocations(2);
     this.state.turn = Math.floor((Math.random() * 2) + 1);
     this.userDisplay();
+    this.renderShips();
   }
 
   componentDidMount(){
@@ -189,7 +191,7 @@ class Battleship extends React.Component {
           thisShipHits.push(location);
           console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
           if (thisShipLocs.length === 0) {
-
+            this.renderShips();
           }
         }
       }
@@ -203,6 +205,9 @@ class Battleship extends React.Component {
           let newShipLoc = this.removeLoc(thisShipLocs, location);
           thisShipHits.push(location);
           console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
+          if (thisShipLocs.length === 0) {
+            this.renderShips();
+          }
         }
       }
     }
@@ -447,6 +452,45 @@ class Battleship extends React.Component {
     this.userDisplay();
   }
 
+  renderShips(){
+    let p1Ships = this.state.Ships1;
+    let p2Ships = this.state.Ships2;
+    let allShips = [p1Ships, p2Ships];
+    var ships1Div = document.getElementById('player1ships');
+    var ships2Div = document.getElementById('player2ships');
+    var allShipsDiv = [ships1Div,ships2Div];
+    if (this.state.status === 'start') {
+      for (var s=0; s<2;s++){
+        let thisUserShip = allShips[s];
+        let thisShipDiv = allShipsDiv[s];
+        for (var i=0; i<4; i++){
+          let thisShipName = thisUserShip[i].name;
+          let thisShipLocs = thisUserShip[i].locations;
+          let shipID = thisShipName+i
+          var newShipDiv = document.createElement("div");
+          newShipDiv.setAttribute("id", shipID);
+          newShipDiv.innerHTML = thisShipName;
+          newShipDiv.style.backgroundColor = "green";
+          thisShipDiv.appendChild(newShipDiv);
+        }
+      }
+    } else {
+      for (var s=0; s<2;s++){
+        let thisUserShip = allShips[s];
+        let thisShipDiv = allShipsDiv[s];
+        for (var i=0; i<4; i++){
+          let thisShipName = thisUserShip[i].name;
+          let thisShipLocs = thisUserShip[i].locations;
+          let shipID = thisShipName+i;
+          if (thisShipLocs.length === 0) {
+            var sunkShip = document.getElementById(shipID);
+            sunkShip.style.backgroundColor = "red";
+          }
+        }
+      }
+    }
+  }
+
   render() {
     return(
     <div id='game'>
@@ -454,19 +498,9 @@ class Battleship extends React.Component {
       <div id='ships'>
         <div id='player1ships'>
           <div>Player 1: </div>
-          <div className='activeship'>Carrier</div>
-          <div className='activeship'>Battleship</div>
-          <div className='activeship'>Submarine</div>
-          <div className='activeship'>Destroyer</div>
-          <div className='activeship'>Patrol Boat</div>
         </div>
         <div id='player2ships'>
           <div>Player 2: </div>
-          <div className='activeship'>Carrier</div>
-          <div className='activeship'>Battleship</div>
-          <div className='activeship'>Submarine</div>
-          <div className='activeship'>Destroyer</div>
-          <div className='activeship'>Patrol Boat</div>
         </div>
       </div>
       <div  id='board' className="col">{
