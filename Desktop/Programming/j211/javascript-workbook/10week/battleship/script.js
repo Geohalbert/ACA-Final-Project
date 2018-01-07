@@ -11,7 +11,8 @@ class Battleship extends React.Component {
       Ships2: undefined,
       occupied1:[],
       occupied2: [],
-      turn: undefined
+      turn: undefined,
+      status: null
     }
     this.startGame = this.startGame.bind(this);
     this.generateLocations = this.generateLocations.bind(this);
@@ -25,9 +26,11 @@ class Battleship extends React.Component {
     this.shipHit = this.shipHit.bind(this);
     this.removeLoc = this.removeLoc.bind(this);
     this.updateShip = this.updateShip.bind(this);
+    this.rowMin = this.rowMin.bind(this);
+    this.rowMax = this.rowMax.bind(this);
   }
 
-  thisRowMin(location){
+  rowMin(location){
     for (var r=0; r<10;r++){
       let rowArray = this.state.grid[r];
       let rowMin = rowArray[0];
@@ -37,8 +40,19 @@ class Battleship extends React.Component {
     }
   }
 
+  rowMax(location){
+    for (var r=0; r<10;r++){
+      let rowArray = this.state.grid[r];
+      let rowMax = rowArray[9];
+      if (rowArray.includes(location) === true) {
+        return rowArray[9];
+      }
+    }
+  }
+
+
   componentWillMount() {
-    let grid, turn;
+    let grid, turn, status;
     var row1=[1,2,3,4,5,6,7,8,9,10];
     var row2=[11,12,13,14,15,16,17,18,19,20];
     var row3=[21,22,23,24,25,26,27,28,29,30];
@@ -52,6 +66,8 @@ class Battleship extends React.Component {
     var newGrid=[row1,row2,row3,row4,row5,row6,row7,row8,row9,row10];
     grid = newGrid;
     turn = 0;
+    status = 0;
+    this.setState({ status });
     this.setState({ grid });
     let Ships1 = this.shipList();
     let Ships2 = this.shipList();
@@ -94,6 +110,7 @@ class Battleship extends React.Component {
     this.generateLocations(1);
     this.generateLocations(2);
     this.state.turn = Math.floor((Math.random() * 2) + 1);
+    this.state.status++;
     this.userDisplay();
   }
 
@@ -122,8 +139,9 @@ class Battleship extends React.Component {
 
   userDisplay(){
     let userTurn = this.state.turn;
+    let gameStatus = this.state.status;
     var turnDiv = document.getElementById('playerTurn');
-    if (userTurn === 1) {
+    if ((gameStatus === 1) && (userTurn === 1 || userTurn === 2)) {
       var newPlayerDiv = document.createElement("div");
       newPlayerDiv.setAttribute("id", "playerDiv");
       newPlayerDiv.innerHTML = "Player's turn:";
@@ -210,7 +228,7 @@ class Battleship extends React.Component {
     var occupied = this.occupiedList(input);
     for (var i=0; i<user.length; i++){
       //assigning variables for rest of function
-      let places, $place, maxSpacesNorth, maxSpacesEast, maxSpacesSouth, maxSpacesWest, posSpacesNorth, posSpacesEast, posSpacesSouth, posSpacesWest, addNew, addNorth, addEast, addSouth, addWest, thisRowEast, thisRowMax, thisRowWest, thisRowMin;
+      let places, $place, maxSpacesNorth, maxSpacesEast, maxSpacesSouth, maxSpacesWest, posSpacesNorth, posSpacesEast, posSpacesSouth, posSpacesWest, addNew, addNorth, addEast, addSouth, addWest, thisRowEast, rowMax, thisRowWest, rowMin;
       let shipType = user[i].name;
       let shipSize = user[i].size;
       let shipLocs = user[i].locations;
@@ -260,16 +278,8 @@ class Battleship extends React.Component {
 
         // East direction (2)
         else if ($direction === 2) {
-          // console.log("direction is East");
-          thisRowEast = parseInt($initialLocation/10)+1;
-          if ($initialLocation%10 === 0) {
-            thisRowMax = (thisRowEast*10);
-            // console.log("the row is " +thisRowEast);
-          }else if (($initialLocation%10 !== 0)) {
-            // console.log("the row is " +thisRowEast);
-            thisRowMax = (thisRowEast*10)+10;
-          }
-          if (maxSpacesEast <= thisRowMax && (maxSpacesEast < 101)) {
+          rowMax = this.rowMax($initialLocation);
+          if (maxSpacesEast <= rowMax && (maxSpacesEast < 101)) {
             // console.log("Seeing if ship fits");
             posSpacesEast = [];
             addNew = [];
@@ -324,19 +334,11 @@ class Battleship extends React.Component {
 
         // West direction (4)
         else if ($direction == 4) {
-          // console.log("direction is West");
-          thisRowWest = parseInt($initialLocation/10);
-          if (thisRowWest === 0) {
-            thisRowWest === 1;
-          }else if (thisRowWest !== 0) {
-            thisRowWest = parseInt($initialLocation/10)+1;
-          }
-          // console.log("the row is " +thisRowWest);
-          thisRowMin = ((thisRowWest*10)-9);
-          if (maxSpacesWest < thisRowMin || maxSpacesWest < 0) {
+          rowMin = this.rowMin($initialLocation);
+          if (maxSpacesWest < rowMin || maxSpacesWest < 0) {
             i=i-1;
             // console.log("Will not fit, initial location removed");
-          }else if (maxSpacesWest >= thisRowMin) {
+          }else if (maxSpacesWest >= rowMin) {
             posSpacesWest = [];
             addNew = [];
             for (var s=0;s<shipSize;s++) {
@@ -434,6 +436,7 @@ class Battleship extends React.Component {
     let dataBlockNum = event.target.getAttribute("data-block");
     let guess = Number(dataBlockNum);
     if (this.state.turn> 0){
+      this.state.status++;
       this.state.turn++;
       var getUser = document.getElementById('currentPlayer').innerHTML;
       this.checkStrike(getUser, guess);
