@@ -27,6 +27,16 @@ class Battleship extends React.Component {
     this.updateShip = this.updateShip.bind(this);
   }
 
+  thisRowMin(location){
+    for (var r=0; r<10;r++){
+      let rowArray = this.state.grid[r];
+      let rowMin = rowArray[0];
+      if (rowArray.includes(location) === true) {
+        return rowArray[0];
+      }
+    }
+  }
+
   componentWillMount() {
     let grid, turn;
     var row1=[1,2,3,4,5,6,7,8,9,10];
@@ -83,7 +93,7 @@ class Battleship extends React.Component {
   startGame(){
     this.generateLocations(1);
     this.generateLocations(2);
-    this.state.turn++;
+    this.state.turn = Math.floor((Math.random() * 2) + 1);
     this.userDisplay();
   }
 
@@ -152,39 +162,31 @@ class Battleship extends React.Component {
   }
 
   updateShip(user,location) {
-    console.log('updateShip test 1');
     if (user === 'Player 1') {
-      console.log('updateShip Player 1 test 2');
       var userShip = this.state.Ships1;
-      for (var i=0; i>4; i++){
-        console.log('updateShip Player 1 test 3');
+      for (var i=0; i<4; i++){
         let thisShipName = userShip[i].name;
         let thisShipLocs = userShip[i].locations;
         let thisShipHits = userShip[i].hits;
         if (thisShipLocs.includes(location) === true){
-          console.log('updateShip Player 1 test 4');
           let newShipLoc = this.removeLoc(thisShipLocs, location);
           thisShipHits.push(location);
           console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
         }
       }
     } if (user === 'Player 2') {
-      console.log('updateShip Player 2 test 2');
       var userShip = this.state.Ships2;
-      console.log('userShip- this.state.Ships2: ', userShip);
       for (var i=0; i<4; i++){
-        console.log('updateShip Player 2 test 3');
         let thisShipName = userShip[i].name;
         let thisShipLocs = userShip[i].locations;
         let thisShipHits = userShip[i].hits;
         if (thisShipLocs.includes(location) === true){
-          console.log('updateShip Player 2 test 4');
           let newShipLoc = this.removeLoc(thisShipLocs, location);
           thisShipHits.push(location);
           console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
         }
       }
-    } console.log('updateShip end of code');
+    }
   }
 
   updateShips(input,user,occupied){
@@ -403,44 +405,37 @@ class Battleship extends React.Component {
 // }
 
   shipHit(hit, userHit,playerLocs){
-    console.log('occupied before hit: ',playerLocs);
     let newOccupied = this.removeLoc(playerLocs,hit);
     this.updateShip(userHit, hit);
     console.log('occupied after hit: ',newOccupied);
   }
 
   checkStrike(user, guess){
-    // console.log('guess.typeof(): ', guess.typeof());
     if (user === 'Player 1') {
       let player2Locs = this.state.occupied2;
-      console.log('player2Locs: ', player2Locs);
       if (player2Locs.includes(guess) === true){
         console.log(user +'has hit his opponents ship!');
         this.shipHit(guess,'Player 2', player2Locs);
       } else {
         console.log(user +' has missed!');
-      }this.state.turn++;
+      }
     } else if (user === 'Player 2') {
       let player1Locs = this.state.occupied1;
-      console.log('player2Locs: ', player1Locs);
       if (player1Locs.includes(guess) === true){
         console.log(user+' has hit his opponents ship!');
         this.shipHit(guess,'Player 1', player1Locs);
       } else {
         console.log(user+' has missed!');
       }
-    }this.state.turn++;
+    }
   }
 
   missle(event){
-    console.log('missle click test');
     let dataBlockNum = event.target.getAttribute("data-block");
     let guess = Number(dataBlockNum);
-    console.log('block number: ', guess);
-    let turnCheck = this.state.turn;
-    if (turnCheck> 0){
+    if (this.state.turn> 0){
+      this.state.turn++;
       var getUser = document.getElementById('currentPlayer').innerHTML;
-      console.log('innerHTML attempt: ', getUser);
       this.checkStrike(getUser, guess);
     } else {
       alert('press the start button to play!')
