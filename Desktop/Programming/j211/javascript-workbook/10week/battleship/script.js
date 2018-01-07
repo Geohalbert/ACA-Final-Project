@@ -18,7 +18,6 @@ class Battleship extends React.Component {
     this.generateLocations = this.generateLocations.bind(this);
     this.playerSelect = this.playerSelect.bind(this);
     this.occupiedList = this.occupiedList.bind(this);
-    this.updateShips = this.updateShips.bind(this);
     this.turnCounter = this.turnCounter.bind(this);
     this.userDisplay = this.userDisplay.bind(this);
     this.missle = this.missle.bind(this);
@@ -218,21 +217,6 @@ class Battleship extends React.Component {
     }
   }
 
-  updateShips(input,user,occupied){
-    if (input === 1) {
-      const newShips1 = {
-        Ships1: user,
-        occupied1: occupied
-      }
-      this.setState(newShips1);
-    } else if (input === 2) {
-      const newState = {
-        Ships2: user,
-        occupied2: occupied
-      }
-      this.setState(newState);
-    }
-  }
 
   generateLocations(input){
     var user = this.playerSelect(input);
@@ -384,8 +368,6 @@ class Battleship extends React.Component {
     };
     console.log("loop completed, user/Ships: ", user);
     console.log("loop completed, occupied: ", occupied);
-    // console.log("testing this.state before updateShips: ", this.state);
-    // this.updateShips(input,user,occupied);
 
 
       // console.log("for player1's ", shipType, " it has a size of ", shipSize, " at locations: ", shipLocs);
@@ -481,7 +463,7 @@ class Battleship extends React.Component {
     var ships1Div = document.getElementById('player1ships');
     var ships2Div = document.getElementById('player2ships');
     //switched ships around
-    var allShipsDiv = [ships2Div,ships1Div];
+    var allShipsDiv = [ships1Div,ships2Div];
     var userMissle = [ships1Div,ships2Div];
     var userShipHit = [ships2Div,ships1Div];
     if (this.state.status === 'start') {
@@ -491,7 +473,8 @@ class Battleship extends React.Component {
         for (var i=0; i<4; i++){
           let thisShipName = thisUserShip[i].name;
           let thisShipLocs = thisUserShip[i].locations;
-          let shipID = thisShipName+i
+          let uniqueNum = Number((s*10)+i);
+          let shipID = thisShipName+uniqueNum;
           var newShipDiv = document.createElement("div");
           newShipDiv.setAttribute("id", shipID);
           newShipDiv.innerHTML = thisShipName;
@@ -506,7 +489,8 @@ class Battleship extends React.Component {
         for (var i=0; i<4; i++){
           let thisShipName = thisUserShip[i].name;
           let thisShipLocs = thisUserShip[i].locations;
-          let shipID = thisShipName+i;
+          let uniqueNum = Number((s*10)+i);
+          let shipID = thisShipName+uniqueNum;
           if (thisShipLocs.length === 0) {
             var sunkShip = document.getElementById(shipID);
             sunkShip.style.backgroundColor = "red";
