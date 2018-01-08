@@ -11,24 +11,49 @@ class Battleship extends React.Component {
       Ships2: undefined,
       occupied1:[],
       occupied2: [],
-      turn: undefined
+      turn: undefined,
+      status: undefined
     }
     this.startGame = this.startGame.bind(this);
-    this.drawBoard = this.drawBoard.bind(this);
-    this.drawRow = this.drawRow.bind(this);
-    this.drawBlocks = this.drawBlocks.bind(this);
     this.generateLocations = this.generateLocations.bind(this);
     this.playerSelect = this.playerSelect.bind(this);
     this.occupiedList = this.occupiedList.bind(this);
-    this.updateShips = this.updateShips.bind(this);
     this.turnCounter = this.turnCounter.bind(this);
     this.userDisplay = this.userDisplay.bind(this);
     this.missle = this.missle.bind(this);
+    this.checkStrike = this.checkStrike.bind(this);
+    this.shipHit = this.shipHit.bind(this);
+    this.removeLoc = this.removeLoc.bind(this);
+    this.updateShip = this.updateShip.bind(this);
+    this.rowMin = this.rowMin.bind(this);
+    this.rowMax = this.rowMax.bind(this);
+    this.renderShips = this.renderShips.bind(this);
+    this.checkWin = this.checkWin.bind(this);
   }
 
-//creates the grid for board
+  rowMin(location){
+    for (var r=0; r<10;r++){
+      let rowArray = this.state.grid[r];
+      let rowMin = rowArray[0];
+      if (rowArray.includes(location) === true) {
+        return rowArray[0];
+      }
+    }
+  }
+
+  rowMax(location){
+    for (var r=0; r<10;r++){
+      let rowArray = this.state.grid[r];
+      let rowMax = rowArray[9];
+      if (rowArray.includes(location) === true) {
+        return rowArray[9];
+      }
+    }
+  }
+
+
   componentWillMount() {
-    let grid, turn;
+    let grid, turn, status;
     var row1=[1,2,3,4,5,6,7,8,9,10];
     var row2=[11,12,13,14,15,16,17,18,19,20];
     var row3=[21,22,23,24,25,26,27,28,29,30];
@@ -41,13 +66,15 @@ class Battleship extends React.Component {
     var row10=[91,92,93,94,95,96,97,98,99,100];
     var newGrid=[row1,row2,row3,row4,row5,row6,row7,row8,row9,row10];
     grid = newGrid;
-    turn = 0;
     this.setState({ grid });
+    turn = 0;
+    this.setState({turn});
+    status = 'start';
+    this.setState({status});
     let Ships1 = this.shipList();
     let Ships2 = this.shipList();
     this.setState({Ships1});
     this.setState({Ships2});
-    this.setState({turn});
   }
 
   shipList(){
@@ -83,70 +110,16 @@ class Battleship extends React.Component {
   startGame(){
     this.generateLocations(1);
     this.generateLocations(2);
-    this.state.turn++;
+    this.state.turn = Math.floor((Math.random() * 2) + 1);
     this.userDisplay();
+    this.renderShips();
   }
 
   componentDidMount(){
     console.log("this.state for componentDidMount: ",this.state)
-    this.drawBoard();
+    // this.drawBoard();
   }
 
-
-
-  drawBoard(){
-    // MIGHT BE MORE EFFECTIVE TO HAVE THE RENDER DISPLAY THE STATE LIKE WE DID IN 08/fetch
-  //
-  //   render(){
-  //     this.initialDraw()
-  //     return(
-  //         <ul>
-  //         {
-  //           this.state.users.map((item, index) => {
-  //             return <li key={index} className="text-center">ID: {item.id}, Name: {item.last_name}, {item.first_name} <img src={item.avatar} className="img-thumbnail"></img></li>
-  //           })
-  //         }
-  //       </ul>
-  //     )
-  //   }
-  // }
-
-
-    if (this.state.grid.length > 0){
-      let boardGrid = this.state.grid;
-      for (var r=0; r<this.state.grid.length; r++){
-        let gridRow = r;
-        let rowNum = r+1;
-        this.drawRow(rowNum);
-      }
-    }
-  }
-
-  drawRow(rowNum) {
-    var board = document.getElementById('board');
-    var newRow = document.createElement("div");
-    var rowID = "row"+rowNum;
-    newRow.setAttribute("data-row", rowNum);
-    newRow.setAttribute("class", "row");
-    newRow.setAttribute("id", rowID);
-    board.appendChild(newRow);
-    for (var c=0; c<10; c++) {
-      this.drawBlocks(rowNum,rowID,c);
-    }
-  }
-
-  drawBlocks(rowNum,rowID,col){
-    let gridRowNum = Number(rowNum-1);
-    var gridRow = document.getElementById(rowID);
-    let gridCol = Number(col);
-    let colNum = gridCol+1;
-    let cellNum = this.state.grid[gridRowNum][gridCol];
-    var newBlock = document.createElement("div");
-    newBlock.setAttribute("data-col", colNum);
-    newBlock.onclick = missle();
-    newBlock.innerHTML = cellNum;
-    gridRow.appendChild(newBlock);
-  }
 
   turnCounter(){
     console.log("turnCounter test1");
@@ -164,37 +137,25 @@ class Battleship extends React.Component {
     }
   }
 
-  drawBlocks(rowNum,rowID,col){
-    let gridRowNum = Number(rowNum-1);
-    var gridRow = document.getElementById(rowID);
-    let gridCol = Number(col);
-    let colNum = gridCol+1;
-    let cellNum = this.state.grid[gridRowNum][gridCol];
-    var newBlock = document.createElement("div");
-    var missle = this.missle();
-    newBlock.setAttribute("data-col", colNum);
-    newBlock.setAttribute("id", 'block');
-    newBlock.onclick = missle;
-    // newBlock.addEventListener("onclick", function(){
-    //   missle;
-    // });
-    newBlock.innerHTML = cellNum;
-    gridRow.appendChild(newBlock);
-  }
 
   userDisplay(){
     let userTurn = this.state.turn;
     var turnDiv = document.getElementById('playerTurn');
-    if (userTurn === 1) {
+    if (this.state.status === 'start') {
       var newPlayerDiv = document.createElement("div");
       newPlayerDiv.setAttribute("id", "playerDiv");
       newPlayerDiv.innerHTML = "Player's turn:";
       turnDiv.appendChild(newPlayerDiv);
       var currentPlayerDiv = document.createElement("div");
       currentPlayerDiv.setAttribute("id", 'currentPlayer');
-      currentPlayerDiv.innerHTML = "Player 1"
-      turnDiv.appendChild(currentPlayerDiv);
-    } else if (userTurn > 1){
+      if (userTurn === 1){
+        currentPlayerDiv.innerHTML = "Player 1";
+        turnDiv.appendChild(currentPlayerDiv);
+      } else {
+        currentPlayerDiv.innerHTML = "Player 2";
+        turnDiv.appendChild(currentPlayerDiv);
+      }
+    } else {
       var updatePlayerDiv = document.getElementById('currentPlayer');
       if (userTurn%2 === 0){
         updatePlayerDiv.innerHTML = "Player 2";
@@ -223,28 +184,47 @@ class Battleship extends React.Component {
     }
   }
 
-  updateShips(input,user,occupied){
-    if (input === 1) {
-      const newShips1 = {
-        Ships1: user,
-        occupied1: occupied
+  updateShip(user,location) {
+    if (user === 'Player 1') {
+      var userShip = this.state.Ships1;
+      for (var i=0; i<5; i++){
+        let thisShipName = userShip[i].name;
+        let thisShipLocs = userShip[i].locations;
+        let thisShipHits = userShip[i].hits;
+        if (thisShipLocs.includes(location) === true){
+          let newShipLoc = this.removeLoc(thisShipLocs, location);
+          thisShipHits.push(location);
+          console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
+          if (thisShipLocs.length === 0) {
+            this.renderShips();
+          }
+        }
       }
-      this.setState(newShips1);
-    } else if (input === 2) {
-      const newState = {
-        Ships2: user,
-        occupied2: occupied
+    } if (user === 'Player 2') {
+      var userShip = this.state.Ships2;
+      for (var i=0; i<5; i++){
+        let thisShipName = userShip[i].name;
+        let thisShipLocs = userShip[i].locations;
+        let thisShipHits = userShip[i].hits;
+        if (thisShipLocs.includes(location) === true){
+          let newShipLoc = this.removeLoc(thisShipLocs, location);
+          thisShipHits.push(location);
+          console.log(user,"'s ",thisShipName,"'s new locations: ",userShip[i]);
+          if (thisShipLocs.length === 0) {
+            this.renderShips();
+          }
+        }
       }
-      this.setState(newState);
     }
   }
+
 
   generateLocations(input){
     var user = this.playerSelect(input);
     var occupied = this.occupiedList(input);
     for (var i=0; i<user.length; i++){
       //assigning variables for rest of function
-      let places, $place, maxSpacesNorth, maxSpacesEast, maxSpacesSouth, maxSpacesWest, posSpacesNorth, posSpacesEast, posSpacesSouth, posSpacesWest, addNew, addNorth, addEast, addSouth, addWest, thisRowEast, thisRowMax, thisRowWest, thisRowMin;
+      let places, $place, maxSpacesNorth, maxSpacesEast, maxSpacesSouth, maxSpacesWest, posSpacesNorth, posSpacesEast, posSpacesSouth, posSpacesWest, addNew, addNorth, addEast, addSouth, addWest, thisRowEast, rowMax, thisRowWest, rowMin;
       let shipType = user[i].name;
       let shipSize = user[i].size;
       let shipLocs = user[i].locations;
@@ -294,16 +274,8 @@ class Battleship extends React.Component {
 
         // East direction (2)
         else if ($direction === 2) {
-          // console.log("direction is East");
-          thisRowEast = parseInt($initialLocation/10)+1;
-          if ($initialLocation%10 === 0) {
-            thisRowMax = (thisRowEast*10);
-            // console.log("the row is " +thisRowEast);
-          }else if (($initialLocation%10 !== 0)) {
-            // console.log("the row is " +thisRowEast);
-            thisRowMax = (thisRowEast*10)+10;
-          }
-          if (maxSpacesEast <= thisRowMax && (maxSpacesEast < 101)) {
+          rowMax = this.rowMax($initialLocation);
+          if (maxSpacesEast <= rowMax && (maxSpacesEast < 101)) {
             // console.log("Seeing if ship fits");
             posSpacesEast = [];
             addNew = [];
@@ -358,19 +330,11 @@ class Battleship extends React.Component {
 
         // West direction (4)
         else if ($direction == 4) {
-          // console.log("direction is West");
-          thisRowWest = parseInt($initialLocation/10);
-          if (thisRowWest === 0) {
-            thisRowWest === 1;
-          }else if (thisRowWest !== 0) {
-            thisRowWest = parseInt($initialLocation/10)+1;
-          }
-          // console.log("the row is " +thisRowWest);
-          thisRowMin = ((thisRowWest*10)-9);
-          if (maxSpacesWest < thisRowMin || maxSpacesWest < 0) {
+          rowMin = this.rowMin($initialLocation);
+          if (maxSpacesWest < rowMin || maxSpacesWest < 0) {
             i=i-1;
             // console.log("Will not fit, initial location removed");
-          }else if (maxSpacesWest >= thisRowMin) {
+          }else if (maxSpacesWest >= rowMin) {
             posSpacesWest = [];
             addNew = [];
             for (var s=0;s<shipSize;s++) {
@@ -405,8 +369,6 @@ class Battleship extends React.Component {
     };
     console.log("loop completed, user/Ships: ", user);
     console.log("loop completed, occupied: ", occupied);
-    // console.log("testing this.state before updateShips: ", this.state);
-    // this.updateShips(input,user,occupied);
 
 
       // console.log("for player1's ", shipType, " it has a size of ", shipSize, " at locations: ", shipLocs);
@@ -428,12 +390,129 @@ class Battleship extends React.Component {
     return $direction;
   };
 
-  missle(){
-    console.log('missle click test');
-    let turnCheck = this.state.turn;
-    if (turnCheck> 0){
-      var getUser = document.getElementById('currentPlayer').innerHTML;
-      console.log('innerHTML attempt: ', getUser);
+  removeLoc(arr,loc){
+    let locIndex = arr.indexOf(loc);
+    let spliced = arr.splice(locIndex,1);
+    return arr;
+  }
+
+// searchShips(userShips,hit) {
+//
+// }
+  checkWin(){
+    if (this.state.occupied1.length === 0) {
+      alert('Player 2 wins!');
+      this.state.status = "over";
+    } else if (this.state.occupied2.length === 0) {
+      alert('Player 1 wins!');
+      this.state.status = "over";
+    }
+  }
+
+  shipHit(hit, userHit,playerLocs){
+    let newOccupied = this.removeLoc(playerLocs,hit);
+    this.updateShip(userHit, hit);
+    console.log('occupied after hit: ',newOccupied);
+  }
+
+  checkStrike(user, guess){
+    if (user === 'Player 1') {
+      let player2Locs = this.state.occupied2;
+      if (player2Locs.includes(guess) === true){
+        console.log(user +'has hit his opponents ship!');
+        this.shipHit(guess,'Player 2', player2Locs);
+        return true;
+      } else {
+        console.log(user +' has missed!');
+        return false;
+      }
+    } else if (user === 'Player 2') {
+      let player1Locs = this.state.occupied1;
+      if (player1Locs.includes(guess) === true){
+        console.log(user+' has hit his opponents ship!');
+        this.shipHit(guess,'Player 1', player1Locs);
+        return true;
+      } else {
+        console.log(user+' has missed!');
+        return false;
+      }
+    }
+  }
+
+  missle(event){
+    if (this.state.status !== 'over'){
+      this.state.status = 'playing';
+      var currentPlayer = document.getElementById('currentPlayer').innerHTML;
+      let dataBlockNum = event.target.getAttribute("data-block");
+      console.log('currentPlayer: ',currentPlayer);
+      var playerBoard = event.target.getAttribute("data-board");
+      console.log('playerBoard: ', playerBoard);
+      let guess = Number(dataBlockNum);
+      if (this.state.turn> 0){
+        if (currentPlayer === playerBoard) {
+          this.state.turn++;
+          var getUser = document.getElementById('currentPlayer').innerHTML;
+          let strike = this.checkStrike(getUser, guess);
+          if (strike){
+            event.target.style.backgroundColor = 'red';
+            this.checkWin();
+          } else {
+            event.target.style.backgroundColor = 'white';
+          }
+        } else {
+          alert("Click the other board!");
+        }
+      } else {
+        alert('press the start button to play!')
+      }
+      this.userDisplay();
+    } else if (this.state.status === 'over'){
+      alert('the game is over!');
+    }
+
+  }
+
+  renderShips(){
+    let p1Ships = this.state.Ships1;
+    let p2Ships = this.state.Ships2;
+    let allShips = [p1Ships, p2Ships];
+    var ships1Div = document.getElementById('player1ships');
+    var ships2Div = document.getElementById('player2ships');
+    //switched ships around
+    var allShipsDiv = [ships1Div,ships2Div];
+    var userMissle = [ships1Div,ships2Div];
+    var userShipHit = [ships2Div,ships1Div];
+    if (this.state.status === 'start') {
+      for (var s=0; s<2;s++){
+        let thisUserShip = allShips[s];
+        let thisShipDiv = allShipsDiv[s];
+        for (var i=0; i<5; i++){
+          let thisShipName = thisUserShip[i].name;
+          let thisShipLocs = thisUserShip[i].locations;
+          let uniqueNum = Number((s*10)+i);
+          let shipID = thisShipName+uniqueNum;
+          var newShipDiv = document.createElement("div");
+          newShipDiv.setAttribute("id", shipID);
+          newShipDiv.innerHTML = thisShipName;
+          newShipDiv.style.backgroundColor = "green";
+          thisShipDiv.appendChild(newShipDiv);
+        }
+      }
+    } else {
+      for (var s=0; s<2;s++){
+        let thisUserShip = allShips[s];
+        let thisShipDiv = allShipsDiv[s];
+        for (var i=0; i<5; i++){
+          let thisShipName = thisUserShip[i].name;
+          let thisShipLocs = thisUserShip[i].locations;
+          let uniqueNum = Number((s*10)+i);
+          let shipID = thisShipName+uniqueNum;
+          if (thisShipLocs.length === 0) {
+            var sunkShip = document.getElementById(shipID);
+            sunkShip.style.backgroundColor = "red";
+          }
+        }
+      }
     }
   }
 
@@ -442,25 +521,43 @@ class Battleship extends React.Component {
     <div id='game'>
       <div id='playerTurn' className='row'></div>
       <div id='ships'>
-        <div id='player1ships'>
-          <div>Player 1: </div>
-          <div className='activeship'>Carrier</div>
-          <div className='activeship'>Battleship</div>
-          <div className='activeship'>Submarine</div>
-          <div className='activeship'>Destroyer</div>
-          <div className='activeship'>Patrol Boat</div>
-        </div>
-        <div id='player2ships'>
-          <div>Player 2: </div>
-          <div className='activeship'>Carrier</div>
-          <div className='activeship'>Battleship</div>
-          <div className='activeship'>Submarine</div>
-          <div className='activeship'>Destroyer</div>
-          <div className='activeship'>Patrol Boat</div>
-        </div>
       </div>
-      <div  id='board' className="col">
+      <div id='bothBoards' className='row'>
+    <div id='player1' className='col'>
+      <div id='player1ships'>
+        <div>Player 1: </div>
       </div>
+      <div  id='board1' className="col">{
+        this.state.grid.map((row1, index1)=> {
+          var rowArray1 = row1;
+          var rowNum1 = index1+1;
+          var rowID1 = 'row'+rowNum1;
+          const newBlock1 = rowArray1.map((block,key) =>{
+            return <div id='block1' data-board='Player 1' data-block={block} key={key} onClick={this.missle} >{block}</div>
+          });
+          return <div key={index1} className='row'>{newBlock1}</div>
+        })
+      }
+    </div>
+  </div>
+  <div id='player2' className='col'>
+    <div id='player2ships'>
+      <div>Player 2: </div>
+    </div>
+    <div  id='board2' className="col">{
+      this.state.grid.map((row2, index2)=> {
+        var rowArray2 = row2;
+        var rowNum2 = index2+1;
+        var rowID2 = 'row'+rowNum2;
+        const newBlock2 = rowArray2.map((block,key) =>{
+          return <div id='block2' data-board='Player 2' data-block={block} key={key} onClick={this.missle} >{block}</div>
+        });
+        return <div key={index2} className='row'>{newBlock2}</div>
+      })
+    }
+  </div>
+</div>
+</div>
       <button id='start' onClick={this.startGame}>Start</button>
     </div>
     )
@@ -468,4 +565,4 @@ class Battleship extends React.Component {
 }
 
 
-  ReactDOM.render(<Battleship />, document.getElementById('react'));
+ReactDOM.render(<Battleship />, document.getElementById('react'));

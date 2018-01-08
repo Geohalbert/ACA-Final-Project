@@ -1,16 +1,20 @@
-#board1 {
+#game {
   display: flex;
   flex-direction: column;
   text-align: center;
   align-items: center;
   justify-content: center;
 }
-#board2 {
+#board1, #board2 {
   display: flex;
   flex-direction: column;
   text-align: center;
   align-items: center;
   justify-content: center;
+}
+#player1, #player2{
+  border: 2px solid;
+  border-color: black;
 }
 #row {
     vertical-align: inherit;
@@ -35,136 +39,24 @@
   border: 3px solid;
   border-color: red;
 }
-#player1ships {
+#player1ships, #player2ships {
   display: flex;
   flex-direction: row;
   justify-content: center;
   text-align: center;
-  flex-flow: space-between;
-  border: 2px solid;
   float: center;
 }
-#player2ships {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  text-align: center;
-  flex-flow: space-between;
-  border: 2px solid;
-  border-color: black;
-  float: center;
-}
-.activeship{
-  background-color: green;
-  margin: 5px;
-}
-
-[data-row] {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: aliceblue;
-  /* margin: 25px; */
-}
-
-[data-col] {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: aliceblue;
-  text-align: center;
-  border: 3px solid;
-  border-color: black;
-  width: 75px;
-  height: 75px;
-  float: center;
-  padding: 5px
-}
-tr th td {
-  justify-content: center;
-  align-items: center;
-  border: 3px solid;
-  border-color: black;
-}
-th {
+#block1, #block2 {
   height: 60px;
   width: 60px;
-  background-color: white;
-}
-#block1 {
-  height: 30px;
-  width: 30px;
+  display: flex;
   text-align: center;
+  align-items: center;
+  justify-content: center;
   background-color: #0072ff;
   /* color: transparent; */
 }
-#block1:hover {
+#block1:hover, #block2:hover {
   /* margin: 3px;  */
   background-color: yellow;
-}
-#block2 {
-  height: 30px;
-  width: 30px;
-  text-align: center;
-  background-color: #0072ff;
-  /* color: transparent; */
-}
-#block2:hover {
-  /* margin: 3px;  */
-  background-color: yellow;
-}
-.miss1 {
-  background-color: #66f0f2;
-  border: 3px solid;
-  border-color: black;
-}
-.miss2 {
-  background-color: #66f0f2;
-  border: 3px solid;
-  border-color: blue;
-}
-.hit1 {
-  background-color: red;
-  border: 3px solid;
-  border-color: black;
-}
-.hit1miss2 {
-  background-color: linear-gradient(to bottom, #e91e63 0%, #e91e63 50%, #66f0f2 51%, #66f0f2 100%);
-  border: 3px solid;
-  border-left: solid black;
-  border-right: solid blue;
-  border-top: solid black;
-  border-bottom: solid blue;
-}
-.hit2 {
-  background-color: red;
-  border: 3px solid;
-  border-color: blue;
-}
-.miss1hit2 {
-  background-image: linear-gradient(to bottom, orange, orange 50%, green 50%, green);
-    background-size: cover;
-    background-repeat: no-repeat;
-  border-left: solid black;
-  border-right: solid blue;
-  border-top: solid black;
-  border-bottom: solid blue;
-}
-.miss1miss2 {
-  background-color: #66f0f2
-  border: 3px solid;
-  border-left: solid black;
-  border-right: solid blue;
-  border-top: solid black;
-  border-bottom: solid blue;
-}
-.hit1hit2 {
-  background-image: linear-gradient(to bottom, orange, orange 50%, green 50%, green);
-    background-size: cover;
-    background-repeat: no-repeat;
-  border: 3px solid;
-  border-left: solid black;
-  border-right: solid blue;
-  border-top: solid black;
-  border-bottom: solid blue;
 }
