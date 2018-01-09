@@ -53,7 +53,7 @@
   text-align: center;
   align-items: center;
   justify-content: center;
-  background-color: #0072ff;
+  background-color: teal;
   /* color: transparent; */
 }
 #block1:hover, #block2:hover {
