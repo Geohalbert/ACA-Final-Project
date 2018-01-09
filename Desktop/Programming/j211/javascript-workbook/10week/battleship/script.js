@@ -174,7 +174,7 @@ class Battleship extends React.Component {
     if (this.state.status === 'start') {
       var newPlayerDiv = document.createElement("div");
       newPlayerDiv.setAttribute("id", "playerDiv");
-      newPlayerDiv.innerHTML = "Player's turn:";
+      newPlayerDiv.innerHTML = "Player's turn:"+'\xa0';
       turnDiv.appendChild(newPlayerDiv);
       var currentPlayerDiv = document.createElement("div");
       currentPlayerDiv.setAttribute("id", 'currentPlayer');
@@ -520,7 +520,7 @@ class Battleship extends React.Component {
           let shipID = thisShipName+uniqueNum;
           var newShipDiv = document.createElement("div");
           newShipDiv.setAttribute("id", shipID);
-          newShipDiv.innerHTML = thisShipName;
+          newShipDiv.innerHTML = '\xa0'+thisShipName+'\xa0';
           newShipDiv.style.backgroundColor = "green";
           thisShipDiv.appendChild(newShipDiv);
         }
