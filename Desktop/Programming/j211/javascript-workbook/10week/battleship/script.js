@@ -110,6 +110,10 @@ class Battleship extends React.Component {
       this.state.status = 'start';
       this.state.occupied1 = [];
       this.state.occupied2 = [];
+      this.state.miss1= [];
+      this.state.miss2= [];
+      this.state.hits1= [];
+      this.state.hits2= [];
       this.state.Ships1 = this.shipList();
       this.state.Ships2 = this.shipList();
       this.removeChildren("playerTurn");
