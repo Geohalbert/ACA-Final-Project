@@ -98,7 +98,7 @@ class Battleship extends React.Component {
 
   removeChildren(divId){
     var thisDiv = document.getElementById(divId);
-    while(divName.firstChild){
+    while(thisDiv.firstChild){
       thisDiv.removeChild(thisDiv.firstChild);
     }
   }
