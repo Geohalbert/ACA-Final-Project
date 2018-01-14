@@ -127,7 +127,7 @@ class Battleship extends React.Component {
         for (var thisRow=thisBoard.firstChild; thisRow!==null; thisRow=thisRow.nextSibling) {
           //now looping through blocks
           for (var thisBlock=thisRow.firstChild; thisBlock!==null; thisBlock=thisBlock.nextSibling) {
-            thisBlock.style.backgroundColor = 'teal';
+            thisBlock.style.removeProperty("background-color");
           }
         }
       }
